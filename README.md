@@ -75,8 +75,9 @@ Basic text input component with advanced features, including textarea support.
 | inputWidth    | string                                 | undefined | Width of the input field                   |
 | labelWidth    | string                                 | undefined | Width of the label (when position is left) |
 | autosave      | (value: string) => Promise<void>       | undefined | Autosave callback function                 |
-| rows          | number                                 | undefined | Number of visible text rows (for textarea) |
-| maxLength     | number                                 | undefined | Maximum number of characters allowed       |
+| isTextarea    | boolean                                | false     | Whether to render as a textarea            |
+| maxHeight     | string                                 | '14rem'   | Maximum height for textarea                |
+| height        | string                                 | '5.5rem'  | Initial height for textarea                |
 
 #### Events
 
