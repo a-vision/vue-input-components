@@ -127,11 +127,9 @@ const handleUsernameAutosave = async (value: string) => {
   <TextInput
     v-model="description"
     label="Description"
-    type="textarea"
     icon="pen"
     placeholder="Enter a detailed description"
-    :rows="5"
-    :maxLength="500"
+    :isTextarea="true"
     :error="descriptionError"
     :autosave="handleDescriptionAutosave"
     label-position="top"
