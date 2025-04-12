@@ -16,15 +16,21 @@ A collection of reusable Vue 3 input components with TypeScript support.
 - Fully responsive
 - Accessible
 - TypeScript support
-
-### TextAreaInput Component
-
-- Multiline text input with adjustable height
-- Customizable number of visible rows
+- Multiline text input support (textarea)
+- Adjustable number of visible rows
 - Optional maximum length limit
-- All features from TextInput component (label positioning, icons, etc.)
 - Vertical resizing support
-- Consistent styling with TextInput
+
+### FileUpload Component
+
+- Drag and drop file upload
+- File size validation (20MB limit)
+- Multiple file selection
+- Progress bar for upload status
+- Customizable icons
+- Automatic or manual upload modes
+- File list display with sizes
+- Error handling and status messages
 
 ## Installation
 
@@ -44,9 +50,45 @@ npm run dev
 npm run build
 ```
 
-## Usage
+## Components
 
-### TextInput Example
+### TextInput
+
+Basic text input component with advanced features, including textarea support.
+
+#### Props
+
+| Prop          | Type                                   | Default   | Description                                |
+| ------------- | -------------------------------------- | --------- | ------------------------------------------ |
+| modelValue    | string                                 | required  | The input value (v-model)                  |
+| label         | string                                 | undefined | Input label                                |
+| type          | string                                 | 'text'    | Input type (text, password, email, etc.)   |
+| icon          | string                                 | undefined | Font Awesome icon name                     |
+| placeholder   | string                                 | undefined | Input placeholder                          |
+| required      | boolean                                | false     | Whether the field is required              |
+| disabled      | boolean                                | false     | Whether the field is disabled              |
+| error         | string                                 | undefined | Error message                              |
+| success       | string                                 | undefined | Success message                            |
+| labelPosition | 'top' \| 'left' \| 'right' \| 'bottom' | 'top'     | Label position                             |
+| labelAlign    | 'left' \| 'right' \| 'center'          | 'left'    | Label text alignment                       |
+| totalWidth    | string                                 | '100%'    | Total width of the component               |
+| inputWidth    | string                                 | undefined | Width of the input field                   |
+| labelWidth    | string                                 | undefined | Width of the label (when position is left) |
+| autosave      | (value: string) => Promise<void>       | undefined | Autosave callback function                 |
+| rows          | number                                 | undefined | Number of visible text rows (for textarea) |
+| maxLength     | number                                 | undefined | Maximum number of characters allowed       |
+
+#### Events
+
+| Event             | Payload | Description                                         |
+| ----------------- | ------- | --------------------------------------------------- |
+| update:modelValue | string  | Emitted when the input value changes                |
+| changed           | void    | Emitted when the value has changed (500ms debounce) |
+| saved             | void    | Emitted when autosave completes successfully        |
+
+#### Examples
+
+##### Basic Text Input
 
 ```vue
 <template>
@@ -77,13 +119,14 @@ const handleUsernameAutosave = async (value: string) => {
 </script>
 ```
 
-### TextAreaInput Example
+##### Textarea Input
 
 ```vue
 <template>
-  <TextAreaInput
+  <TextInput
     v-model="description"
     label="Description"
+    type="textarea"
     icon="pen"
     placeholder="Enter a detailed description"
     :rows="5"
@@ -98,7 +141,7 @@ const handleUsernameAutosave = async (value: string) => {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import TextAreaInput from '@/components/TextAreaInput.vue'
+import TextInput from '@/components/TextInput.vue'
 
 const description = ref('')
 const descriptionError = ref('')
@@ -109,74 +152,18 @@ const handleDescriptionAutosave = async (value: string) => {
 </script>
 ```
 
-## Props
+### FileUpload
 
-### TextInput Props
+Flexible file upload component with drag and drop support.
 
-| Prop          | Type                                   | Default   | Description                                |
-| ------------- | -------------------------------------- | --------- | ------------------------------------------ |
-| modelValue    | string                                 | required  | The input value (v-model)                  |
-| label         | string                                 | undefined | Input label                                |
-| type          | string                                 | 'text'    | Input type (text, password, email, etc.)   |
-| icon          | string                                 | undefined | Font Awesome icon name                     |
-| placeholder   | string                                 | undefined | Input placeholder                          |
-| required      | boolean                                | false     | Whether the field is required              |
-| disabled      | boolean                                | false     | Whether the field is disabled              |
-| error         | string                                 | undefined | Error message                              |
-| success       | string                                 | undefined | Success message                            |
-| labelPosition | 'top' \| 'left' \| 'right' \| 'bottom' | 'top'     | Label position                             |
-| labelAlign    | 'left' \| 'right' \| 'center'          | 'left'    | Label text alignment                       |
-| totalWidth    | string                                 | '100%'    | Total width of the component               |
-| inputWidth    | string                                 | undefined | Width of the input field                   |
-| labelWidth    | string                                 | undefined | Width of the label (when position is left) |
-| autosave      | (value: string) => Promise<void>       | undefined | Autosave callback function                 |
-
-### TextAreaInput Props
-
-Includes all props from TextInput (except `type`), plus:
-
-| Prop      | Type   | Default   | Description                          |
-| --------- | ------ | --------- | ------------------------------------ |
-| rows      | number | 3         | Number of visible text rows          |
-| maxLength | number | undefined | Maximum number of characters allowed |
-
-## Events
-
-Both components emit the following events:
-
-| Event             | Payload | Description                                         |
-| ----------------- | ------- | --------------------------------------------------- |
-| update:modelValue | string  | Emitted when the input value changes                |
-| changed           | void    | Emitted when the value has changed (500ms debounce) |
-| saved             | void    | Emitted when autosave completes successfully        |
-
-## License
-
-MIT
-
-# Vue File Upload Component
-
-A flexible and customizable file upload component for Vue 3 applications.
-
-## Features
-
-- Drag and drop file upload
-- File size validation (20MB limit)
-- Multiple file selection
-- Progress bar for upload status
-- Customizable icons
-- Automatic or manual upload modes
-- File list display with sizes
-- Error handling and status messages
-
-## Props
+#### Props
 
 | Prop        | Type   | Required | Default  | Description                                                            |
 | ----------- | ------ | -------- | -------- | ---------------------------------------------------------------------- |
 | `icon`      | string | No       | 'upload' | Font Awesome icon name to display                                      |
 | `uploadUrl` | string | No       | -        | URL to upload files to. If not provided, manual upload mode is enabled |
 
-## Events
+#### Events
 
 | Event             | Parameters      | Description                                         |
 | ----------------- | --------------- | --------------------------------------------------- |
@@ -185,9 +172,9 @@ A flexible and customizable file upload component for Vue 3 applications.
 | `files-selected`  | `files: File[]` | Emitted when files are selected (manual mode)       |
 | `start-upload`    | `files: File[]` | Emitted when upload button is clicked (manual mode) |
 
-## Usage Examples
+#### Examples
 
-### Basic Usage with Automatic Upload
+##### Automatic Upload Mode
 
 ```vue
 <template>
@@ -212,7 +199,7 @@ const handleUploadError = (error) => {
 </script>
 ```
 
-### Manual Upload Mode
+##### Manual Upload Mode
 
 ```vue
 <template>
@@ -239,38 +226,62 @@ const handleStartUpload = (files) => {
 
 ## Styling
 
-The component uses CSS variables for theming. You can customize the colors by overriding these variables in your application's CSS:
+All components use CSS variables for theming. You can customize the colors by overriding these variables in your application's CSS:
 
 ```css
 :root {
-  --upload-border-color: #dee2e6;
-  --upload-bg-color: #f8f9fa;
-  --upload-dragging-border-color: #0d6efd;
-  --upload-dragging-bg-color: #e7f1ff;
-  --upload-has-files-border-color: #198754;
-  --upload-has-files-bg-color: #d1e7dd;
-  --upload-icon-color: #6c757d;
-  --upload-text-color: #6c757d;
-  --progress-bg-color: #e9ecef;
-  --progress-color: #0d6efd;
-  --success-bg-color: #d1e7dd;
-  --success-text-color: #0f5132;
-  --error-bg-color: #f8d7da;
-  --error-text-color: #842029;
+  /* Base colors */
+  --primary-color: #3498db;
+  --primary-color-light: rgba(52, 152, 219, 0.2);
+  --secondary-color: #2ecc71;
+
+  /* Text colors */
+  --text-color: #2c3e50;
+  --text-color-light: #7f8c8d;
+
+  /* UI colors */
+  --border-color: #dcdfe6;
+  --icon-color: #95a5a6;
+
+  /* State colors */
+  --error-color: #e74c3c;
+  --error-color-light: rgba(231, 76, 60, 0.2);
+  --success-color: #2ecc71;
+  --success-color-light: rgba(46, 204, 113, 0.2);
+  --warning-color: #f1c40f;
+  --warning-color-light: rgba(241, 196, 15, 0.2);
+
+  /* Background colors */
+  --disabled-color: #bdc3c7;
+  --disabled-background: #f5f7fa;
+  --card-bg: #ffffff;
+  --background-color: #f8f9fa;
+
+  /* File Upload specific colors */
+  --upload-border-color: var(--border-color);
+  --upload-bg-color: var(--background-color);
+  --upload-dragging-border-color: var(--primary-color);
+  --upload-dragging-bg-color: var(--primary-color-light);
+  --upload-has-files-border-color: var(--success-color);
+  --upload-has-files-bg-color: var(--success-color-light);
+  --upload-icon-color: var(--icon-color);
+  --upload-text-color: var(--text-color-light);
+  --progress-bg-color: var(--disabled-background);
+  --progress-color: var(--primary-color);
 }
 ```
 
-## File Size Limit
-
-The component enforces a 20MB file size limit. Files larger than this will trigger an error message.
-
 ## Browser Support
 
-The component uses modern browser features including:
+All components use modern browser features and should work in all modern browsers that support:
 
-- File API
-- Drag and Drop API
-- FormData
-- XMLHttpRequest
+- CSS Variables
+- Flexbox
+- File API (for FileUpload)
+- Drag and Drop API (for FileUpload)
+- FormData (for FileUpload)
+- XMLHttpRequest (for FileUpload)
 
-It should work in all modern browsers that support these features.
+## License
+
+MIT
