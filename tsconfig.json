@@ -4,9 +4,12 @@
   "compilerOptions": {
     "composite": true,
     "baseUrl": ".",
+    "declaration": true,
+    "declarationDir": "./dist",
+    "outDir": "./dist",
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["node", "vue-router"]
+    "types": ["node"]
   }
 }

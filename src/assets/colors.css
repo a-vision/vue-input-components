@@ -26,6 +26,11 @@
   --card-bg: #ffffff;
   --background-color: #f8f9fa;
 
+  /* Input colors */
+  --input-bg-color: rgba(255, 255, 255, 0.8);
+  --input-bg-hover: rgba(0, 0, 0, 0.05);
+  --input-bg-disabled: rgba(0, 0, 0, 0.05);
+
   /* Text Colors */
   --text-muted: #6c757d;
 
@@ -52,8 +57,8 @@
   --upload-has-files-border-color: var(--success-color);
   --upload-has-files-bg-color: var(--success-color-light);
   --upload-icon-color: var(--icon-color);
-  --upload-text-color: var(--text-muted);
-  --progress-bg-color: var(--input-bg-disabled);
+  --upload-text-color: var(--text-color-light);
+  --progress-bg-color: var(--disabled-background);
   --progress-color: var(--primary-color);
   --success-bg-color: var(--success-color-light);
   --success-text-color: var(--success-color);

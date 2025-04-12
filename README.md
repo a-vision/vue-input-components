@@ -6,7 +6,7 @@ A collection of reusable Vue 3 input components with TypeScript support.
 
 ### TextInput Component
 
-- Customizable label position (top, left, right, bottom)
+- Customizable label position (top, left)
 - Label alignment options (left, right, center)
 - Icon support with click-to-focus functionality
 - Error and success states with messages
@@ -35,8 +35,37 @@ A collection of reusable Vue 3 input components with TypeScript support.
 ## Installation
 
 ```bash
-npm install
+npm install @a-vision-software/vue-input-components
 ```
+
+## Quick Start
+
+1. Import the components in your Vue application:
+
+   ```vue
+   <script setup>
+   import { TextInput, FileUpload } from '@a-vision-software/vue-input-components'
+   </script>
+   ```
+
+2. Import the color variables in your main CSS file:
+
+   ```css
+   @import '@a-vision-software/vue-input-components/dist/colors.css';
+   ```
+
+3. Use the components in your template:
+   ```vue
+   <template>
+     <TextInput v-model="username" label="Username" icon="user" :required="true" />
+
+     <FileUpload
+       icon="upload"
+       upload-url="https://api.example.com/upload"
+       @upload-complete="handleUploadComplete"
+     />
+   </template>
+   ```
 
 ## Development
 
@@ -58,26 +87,26 @@ Basic text input component with advanced features, including textarea support.
 
 #### Props
 
-| Prop          | Type                                   | Default   | Description                                |
-| ------------- | -------------------------------------- | --------- | ------------------------------------------ |
-| modelValue    | string                                 | required  | The input value (v-model)                  |
-| label         | string                                 | undefined | Input label                                |
-| type          | string                                 | 'text'    | Input type (text, password, email, etc.)   |
-| icon          | string                                 | undefined | Font Awesome icon name                     |
-| placeholder   | string                                 | undefined | Input placeholder                          |
-| required      | boolean                                | false     | Whether the field is required              |
-| disabled      | boolean                                | false     | Whether the field is disabled              |
-| error         | string                                 | undefined | Error message                              |
-| success       | string                                 | undefined | Success message                            |
-| labelPosition | 'top' \| 'left' \| 'right' \| 'bottom' | 'top'     | Label position                             |
-| labelAlign    | 'left' \| 'right' \| 'center'          | 'left'    | Label text alignment                       |
-| totalWidth    | string                                 | '100%'    | Total width of the component               |
-| inputWidth    | string                                 | undefined | Width of the input field                   |
-| labelWidth    | string                                 | undefined | Width of the label (when position is left) |
-| autosave      | (value: string) => Promise<void>       | undefined | Autosave callback function                 |
-| isTextarea    | boolean                                | false     | Whether to render as a textarea            |
-| maxHeight     | string                                 | '14rem'   | Maximum height for textarea                |
-| height        | string                                 | '5.5rem'  | Initial height for textarea                |
+| Prop          | Type                             | Default   | Description                                |
+| ------------- | -------------------------------- | --------- | ------------------------------------------ |
+| modelValue    | string                           | required  | The input value (v-model)                  |
+| label         | string                           | undefined | Input label                                |
+| type          | string                           | 'text'    | Input type (text, password, email, etc.)   |
+| icon          | string                           | undefined | Font Awesome icon name                     |
+| placeholder   | string                           | undefined | Input placeholder                          |
+| required      | boolean                          | false     | Whether the field is required              |
+| disabled      | boolean                          | false     | Whether the field is disabled              |
+| error         | string                           | undefined | Error message                              |
+| success       | string                           | undefined | Success message                            |
+| labelPosition | 'top' \| 'left'                  | 'top'     | Label position                             |
+| labelAlign    | 'left' \| 'right' \| 'center'    | 'left'    | Label text alignment                       |
+| totalWidth    | string                           | '100%'    | Total width of the component               |
+| inputWidth    | string                           | undefined | Width of the input field                   |
+| labelWidth    | string                           | undefined | Width of the label (when position is left) |
+| autosave      | (value: string) => Promise<void> | undefined | Autosave callback function                 |
+| isTextarea    | boolean                          | false     | Whether to render as a textarea            |
+| maxHeight     | string                           | '14rem'   | Maximum height for textarea                |
+| height        | string                           | '5.5rem'  | Initial height for textarea                |
 
 #### Events
 
@@ -109,7 +138,7 @@ Basic text input component with advanced features, including textarea support.
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import TextInput from '@/components/TextInput.vue'
+import { TextInput } from '@a-vision-software/vue-input-components'
 
 const username = ref('')
 const usernameError = ref('')
@@ -140,7 +169,7 @@ const handleUsernameAutosave = async (value: string) => {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import TextInput from '@/components/TextInput.vue'
+import { TextInput } from '@a-vision-software/vue-input-components'
 
 const description = ref('')
 const descriptionError = ref('')
@@ -186,7 +215,7 @@ Flexible file upload component with drag and drop support.
 </template>
 
 <script setup>
-import FileUpload from '@/components/FileUpload.vue'
+import { FileUpload } from '@a-vision-software/vue-input-components'
 
 const handleUploadComplete = (files) => {
   console.log('Uploaded files:', files)
@@ -210,7 +239,7 @@ const handleUploadError = (error) => {
 </template>
 
 <script setup>
-import FileUpload from '@/components/FileUpload.vue'
+import { FileUpload } from '@a-vision-software/vue-input-components'
 
 const handleFilesSelected = (files) => {
   console.log('Selected files:', files)
@@ -255,6 +284,11 @@ All components use CSS variables for theming. You can customize the colors by ov
   --disabled-background: #f5f7fa;
   --card-bg: #ffffff;
   --background-color: #f8f9fa;
+
+  /* Input colors */
+  --input-bg-color: rgba(255, 255, 255, 0.8);
+  --input-bg-hover: rgba(0, 0, 0, 0.05);
+  --input-bg-disabled: rgba(0, 0, 0, 0.05);
 
   /* File Upload specific colors */
   --upload-border-color: var(--border-color);

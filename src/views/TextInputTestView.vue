@@ -236,9 +236,43 @@ const handleFeedbackAutosave = async (value: string) => {
 
 <style scoped>
 .text-input-test {
-  padding: 1rem;
-  width: 100vw;
-  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+  background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80&w=2070');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.text-input-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.input-section {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.input-section h2 {
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
 }
 
 .header {
@@ -286,11 +320,12 @@ h2 {
 }
 
 .input-group {
-  background: var(--card-bg);
+  background: rgba(255, 255, 255, 0.8);
   border-radius: 8px;
   padding: 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   height: fit-content;
+  backdrop-filter: blur(5px);
 }
 
 .input-group h2 {
