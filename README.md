@@ -17,6 +17,15 @@ A collection of reusable Vue 3 input components with TypeScript support.
 - Accessible
 - TypeScript support
 
+### TextAreaInput Component
+
+- Multiline text input with adjustable height
+- Customizable number of visible rows
+- Optional maximum length limit
+- All features from TextInput component (label positioning, icons, etc.)
+- Vertical resizing support
+- Consistent styling with TextInput
+
 ## Installation
 
 ```bash
@@ -36,6 +45,8 @@ npm run build
 ```
 
 ## Usage
+
+### TextInput Example
 
 ```vue
 <template>
@@ -66,7 +77,41 @@ const handleUsernameAutosave = async (value: string) => {
 </script>
 ```
 
+### TextAreaInput Example
+
+```vue
+<template>
+  <TextAreaInput
+    v-model="description"
+    label="Description"
+    icon="pen"
+    placeholder="Enter a detailed description"
+    :rows="5"
+    :maxLength="500"
+    :error="descriptionError"
+    :autosave="handleDescriptionAutosave"
+    label-position="top"
+    label-align="left"
+    required
+  />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import TextAreaInput from '@/components/TextAreaInput.vue'
+
+const description = ref('')
+const descriptionError = ref('')
+
+const handleDescriptionAutosave = async (value: string) => {
+  // Your autosave logic here
+}
+</script>
+```
+
 ## Props
+
+### TextInput Props
 
 | Prop          | Type                                   | Default   | Description                                |
 | ------------- | -------------------------------------- | --------- | ------------------------------------------ |
@@ -86,7 +131,18 @@ const handleUsernameAutosave = async (value: string) => {
 | labelWidth    | string                                 | undefined | Width of the label (when position is left) |
 | autosave      | (value: string) => Promise<void>       | undefined | Autosave callback function                 |
 
+### TextAreaInput Props
+
+Includes all props from TextInput (except `type`), plus:
+
+| Prop      | Type   | Default   | Description                          |
+| --------- | ------ | --------- | ------------------------------------ |
+| rows      | number | 3         | Number of visible text rows          |
+| maxLength | number | undefined | Maximum number of characters allowed |
+
 ## Events
+
+Both components emit the following events:
 
 | Event             | Payload | Description                                         |
 | ----------------- | ------- | --------------------------------------------------- |

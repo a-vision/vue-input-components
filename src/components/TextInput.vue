@@ -5,7 +5,14 @@
       [`label-${labelPosition}`]: label,
       [`label-align-${labelAlign}`]: label,
     }"
-    :style="[{ width: totalWidth || '100%' }, labelStyle]"
+    :style="[
+      { width: totalWidth || '100%' },
+      labelStyle,
+      {
+        '--max-textarea-height': props.maxHeight || props.height || '14rem',
+        '--textarea-height': props.height || '5.5rem',
+      },
+    ]"
   >
     <label v-if="label" :for="id" class="label">
       {{ label }}
@@ -21,6 +28,7 @@
         <font-awesome-icon :icon="icon" class="icon" />
       </div>
       <input
+        v-if="!isTextarea"
         :id="id"
         :type="type"
         :value="modelValue"
@@ -31,12 +39,27 @@
         @input="handleInput"
         ref="inputRef"
       />
-      <span v-if="required && !showSaved && !showChanged" class="required-indicator">required</span>
+      <textarea
+        v-else
+        :id="id"
+        :value="modelValue"
+        :placeholder="placeholder"
+        :required="required"
+        :disabled="disabled"
+        class="input"
+        @input="handleInput"
+        ref="inputRef"
+      ></textarea>
+      <span
+        v-if="required && !showSaved && !showChanged"
+        class="status-indicator required-indicator"
+        >required</span
+      >
       <transition name="fade">
-        <span v-if="showSaved && !error" class="saved-indicator">saved</span>
+        <span v-if="showSaved && !error" class="status-indicator saved-indicator">saved</span>
       </transition>
       <transition name="fade">
-        <span v-if="showChanged && !error" class="changed-indicator">changed</span>
+        <span v-if="showChanged && !error" class="status-indicator changed-indicator">changed</span>
       </transition>
       <div v-if="error" class="error-message">{{ error }}</div>
       <span v-if="success" class="message success-message">{{ success }}</span>
@@ -63,6 +86,9 @@ const props = defineProps<{
   inputWidth?: string
   labelWidth?: string
   autosave?: (value: string) => Promise<void>
+  isTextarea?: boolean
+  maxHeight?: string
+  height?: string
 }>()
 
 const emit = defineEmits<{
@@ -137,10 +163,16 @@ const focusInput = () => {
   inputRef.value?.focus()
 }
 
+const adjustHeight = (element: HTMLTextAreaElement) => {
+  element.style.height = 'auto' // Reset height to auto to calculate new height
+  element.style.height = `${element.scrollHeight}px` // Set height to scrollHeight
+}
+
 const handleInput = (event: Event) => {
-  const value = (event.target as HTMLInputElement).value
+  const value = (event.target as HTMLTextAreaElement).value
   emit('update:modelValue', value)
   debounceAutosave(value)
+  adjustHeight(event.target as HTMLTextAreaElement) // Adjust height on input
 }
 
 // Cleanup timers on unmount
@@ -159,7 +191,7 @@ onUnmounted(() => {
   display: grid;
   gap: 0.5rem;
   width: 100%;
-  margin-top: 0.5rem;
+  margin-top: 0.7rem;
 }
 
 .text-input.label-top {
@@ -228,10 +260,11 @@ onUnmounted(() => {
 
 .icon-wrapper {
   display: grid;
-  place-items: center;
-  padding: 0 1rem;
+  place-items: start;
+  padding: 1rem;
   border-right: 1px solid var(--border-color);
   cursor: pointer;
+  overflow: hidden;
 }
 
 .icon-wrapper:hover {
@@ -296,34 +329,23 @@ onUnmounted(() => {
   line-height: var(--line-height);
 }
 
-.required-indicator {
+.status-indicator {
   position: absolute;
-  top: -0.5rem;
+  top: -4px;
   right: 0.5rem;
   font-size: 0.75rem;
   color: var(--text-muted);
+  line-height: 4px;
   background-color: white;
   padding: 0 0.25rem;
 }
 
 .saved-indicator {
-  position: absolute;
-  top: -0.5rem;
-  right: 0.5rem;
-  font-size: 0.75rem;
   color: var(--success-color);
-  background-color: white;
-  padding: 0 0.25rem;
 }
 
 .changed-indicator {
-  position: absolute;
-  top: -0.5rem;
-  right: 0.5rem;
-  font-size: 0.75rem;
   color: var(--warning-color);
-  background-color: white;
-  padding: 0 0.25rem;
 }
 
 .fade-enter-active,
@@ -334,5 +356,12 @@ onUnmounted(() => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+textarea {
+  min-height: var(--textarea-height, 5.5rem);
+  max-height: var(--max-textarea-height, 14rem);
+  overflow-y: auto;
+  resize: none;
 }
 </style>

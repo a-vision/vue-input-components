@@ -9,15 +9,18 @@ import {
   faBuilding,
   faHashtag,
   faFlag,
+  faUserCircle,
+  faComment,
 } from '@fortawesome/free-solid-svg-icons'
 
 import App from './App.vue'
 import router from './router'
 
 import './assets/colors.css'
+import './assets/main.css'
 
 // Add all solid icons to the library
-library.add(faHome, faUser, faLock, faRoad, faBuilding, faHashtag, faFlag)
+library.add(faHome, faUser, faLock, faRoad, faBuilding, faHashtag, faFlag, faUserCircle, faComment)
 
 const app = createApp(App)
 

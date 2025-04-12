@@ -8,97 +8,136 @@
       <h1>Text Input Testing</h1>
     </div>
     <div class="test-container">
-      <div class="input-group">
-        <h2>Account Information</h2>
-        <TextInput
-          v-model="username"
-          type="text"
-          icon="user"
-          placeholder="Enter your username"
-          :required="true"
-          :error="usernameError"
-          label="Username"
-          label-position="left"
-          label-align="right"
-          label-width="20%"
-          total-width="100%"
-        />
-        <TextInput
-          v-model="password"
-          type="password"
-          icon="lock"
-          placeholder="Enter your password"
-          :required="true"
-          :error="passwordError"
-          label="Password"
-          label-position="left"
-          label-align="right"
-          label-width="20%"
-          total-width="100%"
-        />
-      </div>
-      <div class="input-group">
-        <h2>Address Information</h2>
-        <TextInput
-          v-model="street"
-          label="Street Address"
-          type="text"
-          icon="road"
-          placeholder="Enter your street address"
-          :error="streetError"
-          :autosave="handleStreetAutosave"
-          label-position="top"
-          label-align="left"
-          total-width="100%"
-        />
-        <div class="address-row">
+      <div class="column">
+        <div class="input-group">
+          <h2>Account Information</h2>
           <TextInput
-            v-model="city"
-            label="City"
+            v-model="username"
             type="text"
-            icon="building"
-            placeholder="Enter your city"
-            :error="cityError"
-            :autosave="handleCityAutosave"
-            label-position="top"
-            label-align="left"
-            total-width="48%"
+            icon="user"
+            placeholder="Enter your username"
+            :required="true"
+            :error="usernameError"
+            label="Username"
+            label-position="left"
+            label-align="right"
+            label-width="20%"
+            total-width="100%"
           />
           <TextInput
-            v-model="postalCode"
-            label="Postal Code"
-            type="text"
-            icon="fas fa-hashtag"
-            placeholder="1234AB"
-            :error="postalCodeError"
-            @update:modelValue="handlePostalCodeInput"
-            :autosave="handlePostalCodeAutosave"
-            label-position="top"
-            label-align="left"
-            total-width="48%"
+            v-model="password"
+            type="password"
+            icon="lock"
+            placeholder="Enter your password"
+            :required="true"
+            :error="passwordError"
+            label="Password"
+            label-position="left"
+            label-align="right"
+            label-width="20%"
+            total-width="100%"
           />
         </div>
-        <TextInput
-          v-model="country"
-          label="Country"
-          type="text"
-          icon="flag"
-          placeholder="Enter your country"
-          :error="countryError"
-          :autosave="handleCountryAutosave"
-          label-position="top"
-          label-align="left"
-          total-width="100%"
-        />
-        <TextInput
-          v-model="comment"
-          label="Comment"
-          type="text"
-          placeholder="Your comment"
-          label-position="top"
-          label-align="left"
-          total-width="100%"
-        />
+        <div class="input-group">
+          <h2>Additional Information</h2>
+          <TextInput
+            v-model="bio"
+            isTextarea
+            label="Bio"
+            icon="user-circle"
+            placeholder="Tell us about yourself..."
+            :rows="4"
+            :maxLength="500"
+            :error="bioError"
+            :autosave="handleBioAutosave"
+            label-position="top"
+            label-align="left"
+            total-width="100%"
+            height="10rem"
+            max-height="20rem"
+          />
+          <TextInput
+            v-model="feedback"
+            isTextarea
+            label="Feedback"
+            icon="comment"
+            placeholder="Share your thoughts..."
+            :rows="3"
+            :maxLength="1000"
+            :error="feedbackError"
+            :autosave="handleFeedbackAutosave"
+            label-position="left"
+            label-align="left"
+            label-width="auto"
+            total-width="100%"
+            max-height="8rem"
+          />
+        </div>
+      </div>
+      <div class="column">
+        <div class="input-group">
+          <h2>Address Information</h2>
+          <TextInput
+            v-model="street"
+            label="Street Address"
+            type="text"
+            icon="road"
+            placeholder="Enter your street address"
+            :error="streetError"
+            :autosave="handleStreetAutosave"
+            label-position="top"
+            label-align="left"
+            total-width="100%"
+          />
+          <div class="address-row">
+            <TextInput
+              v-model="city"
+              label="City"
+              type="text"
+              icon="building"
+              placeholder="Enter your city"
+              :error="cityError"
+              :autosave="handleCityAutosave"
+              label-position="top"
+              label-align="left"
+              total-width="48%"
+            />
+            <TextInput
+              v-model="postalCode"
+              label="Postal Code"
+              type="text"
+              icon="fas fa-hashtag"
+              placeholder="1234AB"
+              :error="postalCodeError"
+              @update:modelValue="handlePostalCodeInput"
+              :autosave="handlePostalCodeAutosave"
+              label-position="top"
+              label-align="left"
+              total-width="48%"
+            />
+          </div>
+          <TextInput
+            v-model="country"
+            label="Country"
+            type="text"
+            icon="flag"
+            placeholder="Enter your country"
+            :error="countryError"
+            :autosave="handleCountryAutosave"
+            label-position="top"
+            label-align="left"
+            total-width="100%"
+          />
+          <TextInput
+            v-model="comment"
+            label="Comment"
+            type="text"
+            placeholder="Your comment"
+            label-position="top"
+            label-align="left"
+            total-width="100%"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -115,6 +154,8 @@ const city = ref('')
 const postalCode = ref('')
 const country = ref('')
 const comment = ref('')
+const bio = ref('')
+const feedback = ref('')
 
 const usernameError = ref('')
 const passwordError = ref('')
@@ -122,6 +163,8 @@ const streetError = ref('')
 const cityError = ref('')
 const postalCodeError = ref('')
 const countryError = ref('')
+const bioError = ref('')
+const feedbackError = ref('')
 
 const formatPostalCode = (value: string) => {
   // Remove all non-alphanumeric characters except spaces
@@ -138,7 +181,7 @@ const formatPostalCode = (value: string) => {
   return formatted
 }
 
-const handlePostalCodeInput = (value: string) => {
+const handlePostalCodeInput = (_value: string) => {
   postalCodeError.value = ''
 }
 
@@ -161,25 +204,40 @@ const handlePostalCodeAutosave = async (value: string) => {
 }
 
 const handleStreetAutosave = async (value: string) => {
+  console.log('Autosaving street:', value)
   await new Promise((resolve) => setTimeout(resolve, 1000))
   streetError.value = ''
 }
 
 const handleCityAutosave = async (value: string) => {
+  console.log('Autosaving city:', value)
   await new Promise((resolve) => setTimeout(resolve, 1000))
   cityError.value = ''
 }
 
 const handleCountryAutosave = async (value: string) => {
+  console.log('Autosaving country:', value)
   await new Promise((resolve) => setTimeout(resolve, 1000))
   countryError.value = ''
+}
+
+const handleBioAutosave = async (value: string) => {
+  console.log('Autosaving bio:', value)
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+  bioError.value = ''
+}
+
+const handleFeedbackAutosave = async (value: string) => {
+  console.log('Autosaving feedback:', value)
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+  feedbackError.value = ''
 }
 </script>
 
 <style scoped>
 .text-input-test {
   padding: 1rem;
-  max-width: 1200px;
+  width: 100vw;
   margin: 0 auto;
 }
 
@@ -216,9 +274,15 @@ h2 {
 }
 
 .test-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 600px), 1fr));
+  gap: 1rem;
+}
+
+.column {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .input-group {
@@ -226,6 +290,7 @@ h2 {
   border-radius: 8px;
   padding: 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: fit-content;
 }
 
 .input-group h2 {
@@ -238,5 +303,11 @@ h2 {
   display: flex;
   justify-content: space-between;
   gap: 0.5rem;
+}
+
+@media (max-width: 1200px) {
+  .test-container {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

@@ -1,18 +1,39 @@
 :root {
+  /* Base colors */
+  --primary-color: #3498db;
+  --primary-color-light: rgba(52, 152, 219, 0.2);
+  --secondary-color: #2ecc71;
+
+  /* Text colors */
+  --text-color: #2c3e50;
+  --text-color-light: #7f8c8d;
+
+  /* UI colors */
+  --border-color: #dcdfe6;
+  --icon-color: #95a5a6;
+
+  /* State colors */
+  --error-color: #e74c3c;
+  --error-color-light: rgba(231, 76, 60, 0.2);
+  --success-color: #2ecc71;
+  --success-color-light: rgba(46, 204, 113, 0.2);
+  --warning-color: #f1c40f;
+  --warning-color-light: rgba(241, 196, 15, 0.2);
+
+  /* Background colors */
+  --disabled-color: #bdc3c7;
+  --disabled-background: #f5f7fa;
+  --card-bg: #ffffff;
+  --background-color: #f8f9fa;
+
   /* Text Colors */
-  --text-color: #212529;
   --text-muted: #6c757d;
 
   /* Border Colors */
-  --border-color: #dee2e6;
-
-  /* Background Colors */
   --input-bg: #ffffff;
   --input-bg-disabled: #e9ecef;
 
   /* Status Colors */
-  --primary-color: #4a6cf7;
-  --primary-color-rgb: 74, 108, 247;
   --danger-color: #dc3545;
   --success-color: #28a745;
   --warning-color: #ffc107;
