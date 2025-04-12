@@ -1,39 +1,99 @@
-# vue-input-components
+# Vue Input Components
 
-This template should help get you started developing with Vue 3 in Vite.
+A collection of reusable Vue 3 input components with TypeScript support.
 
-## Recommended IDE Setup
+## Features
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+### TextInput Component
 
-## Type Support for `.vue` Imports in TS
+- Customizable label position (top, left, right, bottom)
+- Label alignment options (left, right, center)
+- Icon support with click-to-focus functionality
+- Error and success states with messages
+- Required field indicator
+- Autosave functionality with debounce
+- Change indicators (saved, changed)
+- Fully responsive
+- Accessible
+- TypeScript support
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+## Installation
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
+```bash
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+## Development
 
-```sh
+```bash
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+## Build
 
-```sh
+```bash
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+## Usage
 
-```sh
-npm run lint
+```vue
+<template>
+  <TextInput
+    v-model="username"
+    label="Username"
+    type="text"
+    icon="user"
+    placeholder="Enter your username"
+    :error="usernameError"
+    :autosave="handleUsernameAutosave"
+    label-position="top"
+    label-align="left"
+    required
+  />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import TextInput from '@/components/TextInput.vue'
+
+const username = ref('')
+const usernameError = ref('')
+
+const handleUsernameAutosave = async (value: string) => {
+  // Your autosave logic here
+}
+</script>
 ```
+
+## Props
+
+| Prop          | Type                                   | Default   | Description                                |
+| ------------- | -------------------------------------- | --------- | ------------------------------------------ |
+| modelValue    | string                                 | required  | The input value (v-model)                  |
+| label         | string                                 | undefined | Input label                                |
+| type          | string                                 | 'text'    | Input type (text, password, email, etc.)   |
+| icon          | string                                 | undefined | Font Awesome icon name                     |
+| placeholder   | string                                 | undefined | Input placeholder                          |
+| required      | boolean                                | false     | Whether the field is required              |
+| disabled      | boolean                                | false     | Whether the field is disabled              |
+| error         | string                                 | undefined | Error message                              |
+| success       | string                                 | undefined | Success message                            |
+| labelPosition | 'top' \| 'left' \| 'right' \| 'bottom' | 'top'     | Label position                             |
+| labelAlign    | 'left' \| 'right' \| 'center'          | 'left'    | Label text alignment                       |
+| totalWidth    | string                                 | '100%'    | Total width of the component               |
+| inputWidth    | string                                 | undefined | Width of the input field                   |
+| labelWidth    | string                                 | undefined | Width of the label (when position is left) |
+| autosave      | (value: string) => Promise<void>       | undefined | Autosave callback function                 |
+
+## Events
+
+| Event             | Payload | Description                                         |
+| ----------------- | ------- | --------------------------------------------------- |
+| update:modelValue | string  | Emitted when the input value changes                |
+| changed           | void    | Emitted when the value has changed (500ms debounce) |
+| saved             | void    | Emitted when autosave completes successfully        |
+
+## License
+
+MIT
