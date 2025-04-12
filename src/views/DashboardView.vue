@@ -4,6 +4,10 @@
       <font-awesome-icon icon="keyboard" size="2x" />
       <span>Text Inputs Test</span>
     </router-link>
+    <router-link to="/file-upload-test" class="tile">
+      <font-awesome-icon icon="upload" size="2x" />
+      <span>File Upload Test</span>
+    </router-link>
   </div>
 </template>
 
@@ -13,6 +17,8 @@
 .dashboard {
   min-height: 100vh;
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
   place-items: center;
   padding: 2rem;
 }

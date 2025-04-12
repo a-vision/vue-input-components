@@ -43,4 +43,20 @@
 
   /* Typography */
   --line-height: 20px;
+
+  /* File Upload Colors */
+  --upload-border-color: var(--border-color);
+  --upload-bg-color: var(--background-color);
+  --upload-dragging-border-color: var(--primary-color);
+  --upload-dragging-bg-color: var(--primary-color-light);
+  --upload-has-files-border-color: var(--success-color);
+  --upload-has-files-bg-color: var(--success-color-light);
+  --upload-icon-color: var(--icon-color);
+  --upload-text-color: var(--text-muted);
+  --progress-bg-color: var(--input-bg-disabled);
+  --progress-color: var(--primary-color);
+  --success-bg-color: var(--success-color-light);
+  --success-text-color: var(--success-color);
+  --error-bg-color: var(--error-color-light);
+  --error-text-color: var(--error-color);
 }

@@ -1,22 +1,27 @@
-import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
-import type { Router } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
+import DashboardView from '../views/DashboardView.vue'
+import TextInputTestView from '../views/TextInputTestView.vue'
+import FileUploadTestView from '../views/FileUploadTestView.vue'
 
-const routes: RouteRecordRaw[] = [
-  {
-    path: '/',
-    name: 'dashboard',
-    component: () => import('@/views/DashboardView.vue'),
-  },
-  {
-    path: '/text-input-test',
-    name: 'text-input-test',
-    component: () => import('@/views/TextInputTestView.vue'),
-  },
-]
-
-const router: Router = createRouter({
-  history: createWebHistory(),
-  routes,
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/',
+      name: 'dashboard',
+      component: DashboardView,
+    },
+    {
+      path: '/text-input-test',
+      name: 'text-input-test',
+      component: TextInputTestView,
+    },
+    {
+      path: '/file-upload-test',
+      name: 'file-upload-test',
+      component: FileUploadTestView,
+    },
+  ],
 })
 
 export default router
