@@ -1,44 +1,50 @@
-import { fileURLToPath, URL } from 'node:url'
 import { resolve } from 'path'
-
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vueDevTools from 'vite-plugin-vue-devtools'
 import dts from 'vite-plugin-dts'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
-    vueDevTools(),
     dts({
-      include: ['src/**/*.ts', 'src/**/*.vue'],
-      beforeWriteFile: (filePath, content) => ({
-        filePath: filePath.replace(/src/, 'dist'),
-        content,
-      }),
+      include: ['src'],
+      exclude: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
+      beforeWriteFile: (filePath, content) => {
+        return {
+          filePath,
+          content: content.replace(/\.vue/g, ''),
+        }
+      },
     }),
   ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
-    dedupe: ['vue'],
-  },
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'VueInputComponents',
       fileName: (format) => `vue-input-components.${format}.js`,
+      formats: ['es', 'umd'],
     },
+    cssCodeSplit: false,
     rollupOptions: {
       external: ['vue'],
       output: {
+        exports: 'named',
         globals: {
           vue: 'Vue',
         },
-        exports: 'named',
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name === 'style.css') {
+            return 'vue-input-components.css'
+          }
+          return assetInfo.name || ''
+        },
       },
+    },
+  },
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src'),
     },
   },
 })
