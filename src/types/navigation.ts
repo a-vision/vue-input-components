@@ -11,11 +11,9 @@ export interface NavigationItem {
 
 export interface NavigationProps {
   items: NavigationItem[]
-  type?: 'tiles' | 'tabs' | 'dropdowns'
+  type?: 'tiles' | 'dropdowns'
   orientation?: 'horizontal' | 'vertical'
-  showIcons?: boolean
   activeItem?: string
-  activeItemAlignment?: 'start' | 'end'
   color?: string
   hoverColor?: string
   activeColor?: string
@@ -27,4 +25,8 @@ export interface NavigationProps {
   width?: string
   backgroundColor?: string
   activeBackgroundColor?: string
+  activeItemAlignment?: 'left' | 'right' | 'top' | 'bottom'
+  showBottomBorder?: boolean
+  bottomBorderColor?: string
+  iconSize?: 'normal' | 'large'
 }

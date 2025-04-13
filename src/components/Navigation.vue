@@ -4,7 +4,7 @@
       'navigation',
       `navigation--${type}`,
       `navigation--${orientation}`,
-      { 'navigation--show-icons': showIcons },
+      { 'navigation--large-icons': iconSize === 'large' },
     ]"
     :style="{
       '--navigation-color': color,
@@ -18,6 +18,9 @@
       '--navigation-width': width,
       '--navigation-background-color': backgroundColor,
       '--navigation-active-background-color': activeBackgroundColor || 'rgba(0, 0, 0, 0.1)',
+      '--navigation-bottom-border': showBottomBorder
+        ? `1px solid ${bottomBorderColor || 'rgba(0, 0, 0, 0.2)'}`
+        : 'none',
     }"
   >
     <template v-if="type === 'tiles'">
@@ -31,6 +34,7 @@
             { 'navigation__tile--disabled': item.disabled },
             { 'navigation__tile--right': item.alignment === 'right' },
             { 'navigation__tile--open': isDropdownOpen(item.id) },
+            { 'navigation__tile--spacer': item.id.includes('spacer') },
           ]"
           :style="{
             '--item-alignment': item.alignment || activeItemAlignment,
@@ -39,15 +43,23 @@
             'max-width': item.width || '200px',
             'grid-column': `span ${Math.ceil(parseInt(item.width || '200px') / 200)}`,
           }"
-          @click="(e) => handleItemClick(item, e)"
+          @click="(e) => !item.id.includes('spacer') && handleItemClick(item, e)"
         >
-          <div class="navigation__tile-content">
-            <div v-if="showIcons && item.icon" class="navigation__icon">
+          <div
+            class="navigation__tile-content"
+            :class="{
+              'navigation__tile-content--icon-only': !item.label,
+              'navigation__tile-content--large-icon': iconSize === 'large' && item.icon,
+            }"
+          >
+            <div v-if="item.icon" class="navigation__icon">
               <font-awesome-icon :icon="item.icon" />
             </div>
-            <div class="navigation__label">{{ item.label }}</div>
-            <div v-if="item.children" class="navigation__dropdown-arrow">
-              <font-awesome-icon icon="chevron-down" />
+            <div v-if="item.label" class="navigation__label">
+              <span>{{ item.label }}</span>
+              <div v-if="item.children" class="navigation__dropdown-arrow">
+                <font-awesome-icon icon="chevron-down" />
+              </div>
             </div>
           </div>
           <div
@@ -67,67 +79,10 @@
               }"
               @click="(e) => handleItemClick(child, e)"
             >
-              <div v-if="showIcons && child.icon" class="navigation__icon">
+              <div v-if="child.icon" class="navigation__icon">
                 <font-awesome-icon :icon="child.icon" />
               </div>
-              <div class="navigation__label">{{ child.label }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </template>
-
-    <template v-else-if="type === 'tabs'">
-      <div class="navigation__tabs">
-        <div
-          v-for="(item, index) in sortedItems"
-          :key="item.id"
-          class="navigation__tab"
-          :class="[
-            { 'navigation__tab--active': item.id === activeItem },
-            { 'navigation__tab--disabled': item.disabled },
-            { 'navigation__tab--right': item.alignment === 'right' },
-            { 'navigation__tab--open': isDropdownOpen(item.id) },
-          ]"
-          :style="{
-            '--item-alignment': item.alignment || activeItemAlignment,
-            width: item.width || '150px',
-            'min-width': item.width || '150px',
-            'max-width': item.width || '150px',
-            'grid-column': `span ${Math.ceil(parseInt(item.width || '150px') / 150)}`,
-          }"
-          @click="(e) => handleItemClick(item, e)"
-        >
-          <div class="navigation__tab-content" @click="(e) => handleItemClick(item, e)">
-            <div v-if="showIcons && item.icon" class="navigation__icon">
-              <font-awesome-icon :icon="item.icon" />
-            </div>
-            <div class="navigation__label">{{ item.label }}</div>
-            <div v-if="item.children" class="navigation__dropdown-arrow">
-              <font-awesome-icon icon="chevron-down" />
-            </div>
-          </div>
-          <div
-            v-if="item.children && isDropdownOpen(item.id)"
-            class="navigation__dropdown-content"
-            :class="{
-              'navigation__dropdown-content--start': item.alignment === 'start',
-              'navigation__dropdown-content--end': item.alignment === 'end',
-            }"
-          >
-            <div
-              v-for="child in item.children"
-              :key="child.id"
-              class="navigation__dropdown-item"
-              :class="{
-                'navigation__dropdown-item--disabled': child.disabled,
-              }"
-              @click="(e) => handleItemClick(child, e)"
-            >
-              <div v-if="showIcons && child.icon" class="navigation__icon">
-                <font-awesome-icon :icon="child.icon" />
-              </div>
-              <div class="navigation__label">{{ child.label }}</div>
+              <div v-if="child.label" class="navigation__label">{{ child.label }}</div>
             </div>
           </div>
         </div>
@@ -151,13 +106,22 @@
             '--item-alignment': item.alignment || activeItemAlignment,
           }"
         >
-          <div class="navigation__dropdown-header" @click="(e) => handleItemClick(item, e)">
-            <div v-if="showIcons && item.icon" class="navigation__icon">
+          <div
+            class="navigation__dropdown-header"
+            :class="{
+              'navigation__dropdown-header--icon-only': !item.label,
+              'navigation__dropdown-header--large-icon': iconSize === 'large' && item.icon,
+            }"
+            @click="(e) => handleItemClick(item, e)"
+          >
+            <div v-if="item.icon" class="navigation__icon">
               <font-awesome-icon :icon="item.icon" />
             </div>
-            <div class="navigation__label">{{ item.label }}</div>
-            <div v-if="item.children" class="navigation__dropdown-arrow">
-              <font-awesome-icon icon="chevron-down" />
+            <div v-if="item.label" class="navigation__label">
+              <span>{{ item.label }}</span>
+              <div v-if="item.children" class="navigation__dropdown-arrow">
+                <font-awesome-icon icon="chevron-down" />
+              </div>
             </div>
           </div>
           <div
@@ -177,10 +141,10 @@
               }"
               @click="(e) => handleItemClick(child, e)"
             >
-              <div v-if="showIcons && child.icon" class="navigation__icon">
+              <div v-if="child.icon" class="navigation__icon">
                 <font-awesome-icon :icon="child.icon" />
               </div>
-              <div class="navigation__label">{{ child.label }}</div>
+              <div v-if="child.label" class="navigation__label">{{ child.label }}</div>
             </div>
           </div>
         </div>
@@ -237,11 +201,7 @@ const closeDropdowns = () => {
 // Close dropdowns when clicking outside
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as HTMLElement
-  if (
-    !target.closest('.navigation__tile') &&
-    !target.closest('.navigation__tab') &&
-    !target.closest('.navigation__dropdown')
-  ) {
+  if (!target.closest('.navigation__tile') && !target.closest('.navigation__dropdown')) {
     closeDropdowns()
   }
 }
@@ -278,6 +238,7 @@ onUnmounted(() => {
   gap: var(--navigation-gap);
   width: 100%;
   height: var(--navigation-height, auto);
+  border-bottom: var(--navigation-bottom-border);
 }
 
 .navigation__tile {
@@ -326,111 +287,6 @@ onUnmounted(() => {
   justify-content: center;
 }
 
-/* Tabs */
-.navigation__tabs {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: var(--navigation-gap);
-  border-bottom: 1px solid var(--navigation-color);
-  width: 100%;
-  height: var(--navigation-height, auto);
-}
-
-.navigation__tab {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: var(--navigation-padding);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  background: transparent;
-  height: 100%;
-  border-bottom: 2px solid transparent;
-  justify-content: center;
-}
-
-.navigation__tab--right {
-  grid-column: auto;
-  margin-left: auto;
-}
-
-.navigation__tab-content {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  width: 100%;
-  justify-content: center;
-}
-
-.navigation__tab:hover {
-  color: var(--navigation-hover-color);
-}
-
-.navigation__tab--active {
-  color: var(--navigation-active-color);
-  background-color: var(--navigation-active-background-color);
-}
-
-.navigation__tab--disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  color: var(--navigation-disabled-color);
-}
-
-.navigation__tab--open {
-  color: var(--navigation-active-color);
-}
-
-.navigation__tab--open .navigation__dropdown-arrow {
-  transform: rotate(180deg);
-}
-
-/* Update dropdown styles for tabs */
-.navigation__tab .navigation__dropdown-content {
-  position: absolute;
-  top: calc(100% + 2px);
-  left: 0;
-  min-width: 200px;
-  background: white;
-  border: 1px solid var(--navigation-color);
-  border-radius: 4px;
-  box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  z-index: 10;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.2s ease;
-  overflow: hidden;
-}
-
-.navigation__tab .navigation__dropdown-item {
-  display: flex;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.navigation__tab .navigation__dropdown-item:last-child {
-  border-bottom: none;
-}
-
-.navigation__tab .navigation__dropdown-item:hover {
-  background-color: #f8f9fa;
-  color: var(--navigation-hover-color);
-}
-
-.navigation__tab .navigation__dropdown-item--disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  color: var(--navigation-disabled-color);
-}
-
 /* Dropdowns */
 .navigation__dropdowns {
   display: flex;
@@ -457,6 +313,8 @@ onUnmounted(() => {
   padding: var(--navigation-padding);
   cursor: pointer;
   transition: all 0.2s ease;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 
 .navigation__dropdown-header:hover {
@@ -475,12 +333,18 @@ onUnmounted(() => {
 }
 
 .navigation__dropdown-arrow {
-  margin-left: 0;
-  margin-right: 1rem;
+  margin-left: 0.5rem;
+  margin-right: 0;
   transition: transform 0.2s ease;
   display: flex;
   align-items: center;
   font-size: 0.8em;
+}
+
+.navigation--large-icons .navigation__dropdown-arrow {
+  margin-left: 0.5rem;
+  margin-right: 0;
+  margin-bottom: 0;
 }
 
 .navigation__dropdown-content {
@@ -510,6 +374,17 @@ onUnmounted(() => {
   padding: var(--navigation-padding);
   cursor: pointer;
   transition: all 0.2s ease;
+  justify-content: center;
+}
+
+.navigation__dropdown-item .navigation__label {
+  text-align: center;
+  justify-content: center;
+}
+
+.navigation__dropdown-item .navigation__icon {
+  margin-left: 0;
+  margin-right: 1rem;
 }
 
 .navigation__dropdown-item:hover {
@@ -525,30 +400,110 @@ onUnmounted(() => {
 
 /* Common styles */
 .navigation__icon {
-  margin-right: 0.5rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
   font-size: 1.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navigation--large-icons .navigation__icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.navigation--large-icons .navigation__tile-content,
+.navigation--large-icons .navigation__dropdown-header {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.navigation--large-icons .navigation__label {
+  text-align: center;
+}
+
+/* Icon-only styles */
+.navigation__tile-content--icon-only,
+.navigation__dropdown-header--icon-only {
+  justify-content: center;
+}
+
+.navigation__tile-content--icon-only .navigation__icon,
+.navigation__dropdown-header--icon-only .navigation__icon {
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+}
+
+/* Update content layouts */
+.navigation__tile-content,
+.navigation__dropdown-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.navigation__tile-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.navigation__dropdown-header {
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.navigation__tile--spacer {
+  cursor: default;
+  pointer-events: none;
+  border-color: transparent;
+  background: transparent;
+}
+
+.navigation__tile--spacer:hover {
+  border-color: transparent;
+  color: inherit;
+  background: transparent;
 }
 
 .navigation__label {
-  flex: 1;
   white-space: nowrap;
   text-align: center;
-  margin-right: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Remove duplicate dropdown styles */
-.navigation-dropdown,
-.navigation-dropdown__list,
-.navigation-dropdown__item,
-.navigation-dropdown__link,
-.navigation-dropdown__button,
-.navigation-item--open {
-  display: none;
+.navigation__label span {
+  flex: 1;
+  text-align: center;
+}
+
+.navigation__dropdown-item .navigation__label {
+  text-align: center;
+  justify-content: center;
+}
+
+.navigation__dropdown-item .navigation__icon {
+  margin-left: 0;
+  margin-right: 1rem;
+}
+
+.navigation__tile--open .navigation__dropdown-arrow,
+.navigation__dropdown--open .navigation__dropdown-arrow {
+  transform: rotate(180deg);
 }
 
 /* Update dropdown styles */
 .navigation__tile--open .navigation__dropdown-content,
-.navigation__tab--open .navigation__dropdown-content,
 .navigation__dropdown--open .navigation__dropdown-content {
   opacity: 1;
   visibility: visible;
@@ -566,13 +521,6 @@ onUnmounted(() => {
 .navigation__tile--right .navigation__dropdown-content {
   left: auto;
   right: 0;
-}
-
-/* Specific border radius for tab navigation dropdown */
-.navigation__tab--open .navigation__dropdown-content {
-  border-radius: var(--navigation-border-radius);
-  min-width: 200px;
-  right: auto;
 }
 
 .navigation__tile--open .navigation__dropdown-content,
@@ -598,27 +546,5 @@ onUnmounted(() => {
   opacity: 0.5;
   cursor: not-allowed;
   color: var(--navigation-disabled-color);
-}
-
-/* Update content layouts */
-.navigation__tile-content,
-.navigation__tab-content,
-.navigation__dropdown-header {
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-
-.navigation__tile-content {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  flex-direction: row;
-  justify-content: center;
-}
-
-.navigation__tab-content,
-.navigation__dropdown-header {
-  flex-direction: row;
 }
 </style>

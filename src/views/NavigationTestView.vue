@@ -12,7 +12,7 @@
         orientation="horizontal"
         v-model:activeItem="activeDefaultItem"
         @item-click="handleDefaultClick"
-        :showIcons="false"
+        iconSize="large"
         height="90px"
         backgroundColor="#fff"
       />
@@ -25,16 +25,12 @@
       <h2>Tabs Navigation (Mixed Alignment)</h2>
       <Navigation
         :items="mixedAlignmentItems"
-        type="tabs"
+        type="tiles"
         orientation="horizontal"
         v-model:activeItem="activeTabsItem"
         @item-click="handleTabsClick"
-        :showIcons="false"
-        color="#4a5568"
-        hoverColor="#2d3748"
-        activeColor="#1a202c"
-        disabledColor="#a0aec0"
-        borderRadius="4px"
+        height="2em"
+        showBottomBorder
       />
       <div v-if="lastClicked.tabs" class="click-info">
         Last clicked: {{ lastClicked.tabs.label }}
@@ -113,6 +109,7 @@ const defaultItems = [
     id: 'dashboard',
     label: 'Dashboard',
     url: '/dashboard',
+    icon: 'gauge-high',
   },
   {
     id: 'reports',
@@ -143,6 +140,7 @@ const defaultItems = [
     id: 'settings',
     label: 'Settings',
     alignment: 'right',
+    icon: 'sliders',
     children: [
       {
         id: 'profile',
@@ -161,6 +159,7 @@ const mixedAlignmentItems = [
     id: 'dashboard',
     label: 'Dashboard',
     url: '/dashboard',
+    icon: 'gauge-high',
   },
   {
     id: 'spacer',
@@ -171,6 +170,7 @@ const mixedAlignmentItems = [
     id: 'settings',
     label: 'Settings',
     alignment: 'right',
+    icon: 'sliders',
     children: [
       {
         id: 'profile',
