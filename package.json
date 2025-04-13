@@ -1,6 +1,6 @@
 {
   "name": "@a-vision-software/vue-input-components",
-  "version": "1.1.55",
+  "version": "1.1.56",
   "description": "A collection of reusable Vue 3 input components with TypeScript support",
   "author": "A-Vision Software",
   "license": "MIT",

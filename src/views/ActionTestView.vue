@@ -159,7 +159,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import Action from '../components/Action.vue'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 const actionLog = ref<string[]>([])
 const actionColor = ref('#4CAF50')
