@@ -61,6 +61,7 @@ export interface ActionProps {
   type?: 'button' | 'submit' | 'reset'
   disabled?: boolean
   color?: string
+  size?: 'small' | 'regular' | 'large'
 }
 
 export type ActionComponent = {

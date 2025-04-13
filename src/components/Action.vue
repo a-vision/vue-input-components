@@ -11,6 +11,8 @@
         'action--icon-label': icon && label,
         'action--disabled': disabled,
         'action--link': isLink,
+        'action--small': size === 'small',
+        'action--large': size === 'large',
       },
     ]"
     :style="{
@@ -36,6 +38,7 @@ interface ActionProps {
   type?: 'button' | 'submit' | 'reset'
   disabled?: boolean
   color?: string
+  size?: 'small' | 'regular' | 'large'
 }
 
 const props = withDefaults(defineProps<ActionProps>(), {
@@ -45,6 +48,7 @@ const props = withDefaults(defineProps<ActionProps>(), {
   type: 'button',
   disabled: false,
   color: 'var(--primary)',
+  size: 'regular',
 })
 
 const emit = defineEmits<{
@@ -74,6 +78,45 @@ const handleClick = (event: MouseEvent) => {
   text-decoration: none;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+}
+
+/* Size variants */
+.action--small {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  border-radius: 0.25rem;
+  gap: 0.25rem;
+  min-height: 1.5rem;
+}
+
+.action--small.action--icon-only {
+  padding: 0.375rem;
+  min-width: 1.5rem;
+}
+
+.action--small .action__icon {
+  font-size: 0.9rem;
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.action--large {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.25rem;
+  border-radius: 0.5rem;
+  gap: 0.625rem;
+  min-height: 2.5rem;
+}
+
+.action--large.action--icon-only {
+  padding: 1rem;
+  min-width: 2.5rem;
+}
+
+.action--large .action__icon {
+  font-size: 1.35rem;
+  width: 1.35rem;
+  height: 1.35rem;
 }
 
 .action:hover:not(.action--disabled) {

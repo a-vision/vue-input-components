@@ -57,6 +57,7 @@
             label="Submit"
             type="submit"
             :color="actionColor"
+            size="large"
             @click="handleActionClick('Submit')"
           />
           <Action label="Cancel" :color="actionColor" @click="handleActionClick('Cancel')" />
@@ -64,6 +65,7 @@
             label="Reset"
             type="reset"
             :color="actionColor"
+            size="small"
             @click="handleActionClick('Reset')"
           />
         </div>
@@ -77,6 +79,7 @@
             label="View Details"
             href="/details"
             :color="actionColor"
+            size="large"
             @click="handleActionClick('View Details')"
           />
           <Action
@@ -87,10 +90,10 @@
             @click="handleActionClick('Download')"
           />
           <Action
-            icon="share"
             label="Share"
             href="/share"
             :color="actionColor"
+            size="small"
             @click="handleActionClick('Share')"
           />
         </div>
