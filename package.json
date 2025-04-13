@@ -1,6 +1,6 @@
 {
   "name": "@a-vision-software/vue-input-components",
-  "version": "1.1.50",
+  "version": "1.1.55",
   "description": "A collection of reusable Vue 3 input components with TypeScript support",
   "author": "A-Vision Software",
   "license": "MIT",
@@ -22,11 +22,28 @@
   ],
   "type": "module",
   "files": [
+<<<<<<< Updated upstream
     "src"
   ],
   "main": "./src/index.ts",
   "module": "./src/index.ts",
   "exports": "./src/index.ts",
+=======
+    "dist"
+  ],
+  "main": "./dist/vue-input-components.cjs.js",
+  "module": "./dist/vue-input-components.es.js",
+  "types": "./dist/types.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/vue-input-components.es.js",
+      "require": "./dist/vue-input-components.cjs.js",
+      "types": "./dist/types.d.ts"
+    },
+    "./styles.css": "./dist/vue-input-components.css",
+    "./styles": "./dist/vue-input-components.css"
+  },
+>>>>>>> Stashed changes
   "sideEffects": [
     "**/*.css"
   ],
@@ -47,7 +64,8 @@
     "@fortawesome/fontawesome-svg-core": "^6.7.0",
     "@fortawesome/free-regular-svg-icons": "^6.7.0",
     "@fortawesome/free-solid-svg-icons": "^6.7.0",
-    "@fortawesome/vue-fontawesome": "^3.0.0"
+    "@fortawesome/vue-fontawesome": "^3.0.0",
+    "@vuepic/vue-datepicker": "^11.0.2"
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.2",

@@ -6,7 +6,7 @@
       [`label-align-${labelAlign}`]: label,
     }"
     :style="[
-      { width: totalWidth || '100%' },
+      { width: type === 'date' ? totalWidth || '12rem' : totalWidth || '100%' },
       labelStyle,
       {
         '--max-textarea-height': props.maxHeight || props.height || '14rem',
@@ -27,16 +27,40 @@
       <div v-if="icon" class="icon-wrapper" @click="focusInput">
         <font-awesome-icon :icon="icon" class="icon" />
       </div>
+      <Datepicker
+        v-if="type === 'date'"
+        :id="id"
+        v-model="dateValue"
+        :placeholder="placeholder"
+        :disabled="disabled"
+        :readonly="readonly"
+        :min-date="min"
+        :max-date="max"
+        :format="dateFormat"
+        :enable-time-picker="false"
+        :auto-apply="true"
+        :close-on-auto-apply="true"
+        :clearable="true"
+        :input-class-name="['input', { 'has-icon': icon }]"
+        @update:model-value="handleDateChange"
+        @focus="handleFocus"
+        @blur="handleBlur"
+      />
       <input
-        v-if="!isTextarea"
+        v-else-if="!isTextarea"
         :id="id"
         :type="type"
         :value="modelValue"
         :placeholder="placeholder"
         :required="required"
         :disabled="disabled"
+        :readonly="readonly"
+        :maxlength="maxlength"
         class="input"
         @input="handleInput"
+        @focus="handleFocus"
+        @blur="handleBlur"
+        @keydown="handleKeydown"
         ref="inputRef"
       />
       <textarea
@@ -68,42 +92,44 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onUnmounted } from 'vue'
+import { computed, ref, onUnmounted, onMounted } from 'vue'
+import { TextInputProps } from '../types'
+import Datepicker from '@vuepic/vue-datepicker'
+import '@vuepic/vue-datepicker/dist/main.css'
 
-const props = defineProps<{
-  modelValue: string
-  label?: string
-  type?: string
-  icon?: string
-  placeholder?: string
-  required?: boolean
-  disabled?: boolean
-  error?: string
-  success?: string
-  labelPosition?: 'top' | 'left'
-  labelAlign?: 'left' | 'right' | 'center'
-  totalWidth?: string
-  inputWidth?: string
-  labelWidth?: string
-  autosave?: (value: string) => Promise<void>
-  isTextarea?: boolean
-  maxHeight?: string
-  height?: string
-}>()
+const props = withDefaults(defineProps<TextInputProps>(), {
+  modelValue: '',
+  type: 'text',
+  placeholder: '',
+  label: '',
+  icon: undefined,
+  disabled: false,
+  readonly: false,
+  maxlength: undefined,
+  error: '',
+  min: undefined,
+  max: undefined,
+})
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
   (e: 'changed'): void
   (e: 'saved'): void
+  (e: 'focus'): void
+  (e: 'blur'): void
+  (e: 'keydown', event: KeyboardEvent): void
 }>()
 
-const id = computed(() => `input-${Math.random().toString(36).substr(2, 9)}`)
+const id = ref<string>('')
 const showSaved = ref(false)
 const showChanged = ref(false)
 const isChanged = ref(false)
 const debounceTimer = ref<number | null>(null)
 const changedTimer = ref<number | null>(null)
 const inputRef = ref<HTMLInputElement | null>(null)
+const dateValue = ref<Date | null>(null)
+
+const dateFormat = 'dd/MM/yyyy'
 
 const labelStyle = computed(() => {
   if (!props.label) return {}
@@ -114,6 +140,20 @@ const labelStyle = computed(() => {
   }
   return {}
 })
+
+const formatDateForModel = (date: Date | null): string => {
+  if (!date) return ''
+  const day = String(date.getDate()).padStart(2, '0')
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const year = date.getFullYear()
+  return `${day}/${month}/${year}`
+}
+
+const parseDateFromModel = (dateStr: string): Date | null => {
+  if (!dateStr) return null
+  const [day, month, year] = dateStr.split('/').map(Number)
+  return new Date(year, month - 1, day)
+}
 
 const handleAutosave = async (value: string) => {
   if (props.autosave) {
@@ -175,6 +215,24 @@ const handleInput = (event: Event) => {
   adjustHeight(event.target as HTMLTextAreaElement) // Adjust height on input
 }
 
+const handleFocus = () => {
+  emit('focus')
+}
+
+const handleBlur = () => {
+  emit('blur')
+}
+
+const handleKeydown = (event: KeyboardEvent) => {
+  emit('keydown', event)
+}
+
+const handleDateChange = (date: Date | null) => {
+  const formattedDate = formatDateForModel(date)
+  emit('update:modelValue', formattedDate)
+  debounceAutosave(formattedDate)
+}
+
 // Cleanup timers on unmount
 onUnmounted(() => {
   if (debounceTimer.value) {
@@ -183,6 +241,18 @@ onUnmounted(() => {
   if (changedTimer.value) {
     clearTimeout(changedTimer.value)
   }
+})
+
+onMounted(() => {
+  id.value = `text-input-${Math.random().toString(36).substr(2, 9)}`
+  if (props.type === 'date' && props.modelValue) {
+    dateValue.value = parseDateFromModel(props.modelValue)
+  }
+})
+
+defineExpose({
+  focus: () => inputRef.value?.focus(),
+  blur: () => inputRef.value?.blur(),
 })
 </script>
 
@@ -364,5 +434,70 @@ textarea {
   max-height: var(--max-textarea-height, 14rem);
   overflow-y: auto;
   resize: none;
+}
+
+:deep(.dp__input) {
+  padding: 0.75rem 1rem;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  color: var(--text-color);
+  background: transparent;
+  width: 100%;
+  line-height: var(--line-height);
+}
+
+:deep(.dp__input::placeholder) {
+  color: var(--text-muted);
+}
+
+:deep(.dp__input:disabled) {
+  background-color: var(--input-bg-disabled);
+  cursor: not-allowed;
+}
+
+:deep(.dp__input.has-icon) {
+  padding-left: 2.5rem;
+}
+
+:deep(.dp__input_icon) {
+  display: none;
+}
+
+:deep(.dp__input_icon_pad) {
+  padding-right: 0.75rem;
+}
+
+:deep(.dp__menu) {
+  background-color: var(--input-bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+:deep(.dp__cell_inner) {
+  color: var(--text-color);
+}
+
+:deep(.dp__today) {
+  border-color: var(--primary-color);
+}
+
+:deep(.dp__active_date) {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+:deep(.dp__range_start),
+:deep(.dp__range_end) {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+:deep(.dp__range_between) {
+  background-color: var(--primary-color-light);
+  color: var(--text-color);
 }
 </style>

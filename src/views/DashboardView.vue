@@ -1,13 +1,29 @@
 <template>
   <div class="dashboard">
-    <router-link to="/text-input-test" class="tile">
-      <font-awesome-icon icon="keyboard" size="2x" />
-      <span>Text Inputs Test</span>
-    </router-link>
-    <router-link to="/file-upload-test" class="tile">
-      <font-awesome-icon icon="upload" size="2x" />
-      <span>File Upload Test</span>
-    </router-link>
+    <h1>Vue Input Components</h1>
+    <div class="tile-grid">
+      <router-link to="/text-input" class="tile">
+        <div class="tile-content">
+          <font-awesome-icon icon="keyboard" class="tile-icon" />
+          <h2>Text Input</h2>
+          <p>Test the text input component with various configurations</p>
+        </div>
+      </router-link>
+      <router-link to="/file-upload" class="tile">
+        <div class="tile-content">
+          <font-awesome-icon icon="file-upload" class="tile-icon" />
+          <h2>File Upload</h2>
+          <p>Test the file upload component with drag and drop support</p>
+        </div>
+      </router-link>
+      <router-link to="/action" class="tile">
+        <div class="tile-content">
+          <font-awesome-icon icon="hand-pointer" class="tile-icon" />
+          <h2>Action</h2>
+          <p>Test the action component with various button and link styles</p>
+        </div>
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -15,43 +31,61 @@
 
 <style scoped>
 .dashboard {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2rem;
-  place-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 2rem;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--text-primary);
+}
+
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
 }
 
 .tile {
-  display: grid;
-  grid-template-rows: auto auto;
-  gap: 1rem;
-  justify-items: center;
-  align-items: center;
-  padding: 2rem;
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 0.75rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  width: 200px;
   text-decoration: none;
+  color: inherit;
+  background-color: white;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
 }
 
 .tile:hover {
-  background: #e9ecef;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.tile svg {
-  color: #495057;
-}
-
-.tile span {
-  font-weight: 500;
-  color: #495057;
+.tile-content {
+  padding: 2rem;
   text-align: center;
+}
+
+.tile-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--primary);
+}
+
+.tile h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+}
+
+.tile p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.5;
 }
 </style>

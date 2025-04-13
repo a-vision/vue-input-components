@@ -10,6 +10,10 @@ export default defineConfig({
     dts({
       include: ['src'],
       exclude: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
+      insertTypesEntry: true,
+      copyDtsFiles: true,
+      rollupTypes: true,
+      outDir: 'dist',
       beforeWriteFile: (filePath, content) => {
         return {
           filePath,
@@ -23,7 +27,7 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'VueInputComponents',
       fileName: (format) => `vue-input-components.${format}.js`,
-      formats: ['cjs', 'es', 'umd'],
+      formats: ['es', 'cjs', 'umd'],
     },
     cssCodeSplit: false,
     rollupOptions: {

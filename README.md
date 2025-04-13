@@ -55,6 +55,7 @@ npm install @a-vision-software/vue-input-components
    ```
 
 3. Use the components in your template:
+
    ```vue
    <template>
      <TextInput v-model="username" label="Username" icon="user" :required="true" />

@@ -100,7 +100,7 @@
               :autosave="handleCityAutosave"
               label-position="top"
               label-align="left"
-              total-width="48%"
+              total-width="calc(100% - 11rem)"
             />
             <TextInput
               v-model="postalCode"
@@ -113,7 +113,7 @@
               :autosave="handlePostalCodeAutosave"
               label-position="top"
               label-align="left"
-              total-width="48%"
+              total-width="10rem"
             />
           </div>
           <TextInput
@@ -127,6 +127,19 @@
             label-position="top"
             label-align="left"
             total-width="100%"
+          />
+          <TextInput
+            v-model="birthDate"
+            type="date"
+            label="Date of Birth"
+            icon="calendar"
+            placeholder="DD/MM/YYYY"
+            :min="minDate"
+            :max="maxDate"
+            :error="birthDateError"
+            :autosave="handleBirthDateAutosave"
+            label-position="top"
+            label-align="left"
           />
           <TextInput
             v-model="comment"
@@ -153,6 +166,7 @@ const street = ref('')
 const city = ref('')
 const postalCode = ref('')
 const country = ref('')
+const birthDate = ref('')
 const comment = ref('')
 const bio = ref('')
 const feedback = ref('')
@@ -163,8 +177,12 @@ const streetError = ref('')
 const cityError = ref('')
 const postalCodeError = ref('')
 const countryError = ref('')
+const birthDateError = ref('')
 const bioError = ref('')
 const feedbackError = ref('')
+
+const minDate = '01/01/1900'
+const maxDate = '31/12/2024'
 
 const formatPostalCode = (value: string) => {
   // Remove all non-alphanumeric characters except spaces
@@ -219,6 +237,12 @@ const handleCountryAutosave = async (value: string) => {
   console.log('Autosaving country:', value)
   await new Promise((resolve) => setTimeout(resolve, 1000))
   countryError.value = ''
+}
+
+const handleBirthDateAutosave = async (value: string) => {
+  console.log('Autosaving birth date:', value)
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+  birthDateError.value = ''
 }
 
 const handleBioAutosave = async (value: string) => {

@@ -2,12 +2,27 @@ import type { Component } from 'vue'
 
 export interface TextInputProps {
   modelValue: string
+  type?: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'date'
   label?: string
   placeholder?: string
-  error?: string
+  icon?: string
   disabled?: boolean
-  required?: boolean
+  readonly?: boolean
   maxlength?: number
+  error?: string
+  min?: string
+  max?: string
+  required?: boolean
+  success?: string
+  labelPosition?: 'top' | 'left'
+  labelAlign?: 'left' | 'right' | 'center'
+  totalWidth?: string
+  inputWidth?: string
+  labelWidth?: string
+  autosave?: (value: string) => Promise<void>
+  isTextarea?: boolean
+  maxHeight?: string
+  height?: string
 }
 
 export interface FileUploadProps {
@@ -32,5 +47,22 @@ export interface FileUploadEmits {
   (e: 'upload-error', error: Error): void
 }
 
-export type TextInputComponent = Component<TextInputProps>
+export type TextInputComponent = {
+  focus: () => void
+  blur: () => void
+}
+
 export type FileUploadComponent = Component<FileUploadProps>
+
+export interface ActionProps {
+  icon?: string
+  label?: string
+  href?: string
+  type?: 'button' | 'submit' | 'reset'
+  disabled?: boolean
+}
+
+export type ActionComponent = {
+  focus: () => void
+  blur: () => void
+}
