@@ -23,6 +23,13 @@
           <p>Test the action component with various button and link styles</p>
         </div>
       </router-link>
+      <router-link to="/navigation" class="tile">
+        <div class="tile-content">
+          <font-awesome-icon icon="bars" class="tile-icon" />
+          <h2>Navigation</h2>
+          <p>Test the navigation component</p>
+        </div>
+      </router-link>
     </div>
   </div>
 </template>

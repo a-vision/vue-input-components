@@ -69,3 +69,40 @@ export type ActionComponent = {
   focus: () => void
   blur: () => void
 }
+
+export interface NavigationItem {
+  id: string
+  label: string
+  icon?: string
+  url?: string
+  children?: NavigationItem[]
+  type?: 'tile' | 'tab' | 'dropdown'
+  color?: string
+  disabled?: boolean
+  alignment?: 'start' | 'end'
+}
+
+export interface NavigationProps {
+  items: NavigationItem[]
+  type?: 'tiles' | 'tabs' | 'dropdowns'
+  orientation?: 'horizontal' | 'vertical'
+  activeItem?: string
+  color?: string
+  hoverColor?: string
+  activeColor?: string
+  disabledColor?: string
+  iconSize?: string
+  gap?: string
+  padding?: string
+  borderRadius?: string
+  showIcons?: boolean
+  activeItemAlignment?: 'start' | 'end'
+}
+
+export interface NavigationComponent {
+  props: NavigationProps
+  emits: {
+    (e: 'item-click', item: NavigationItem): void
+    (e: 'update:activeItem', id: string): void
+  }
+}
