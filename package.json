@@ -22,13 +22,6 @@
   ],
   "type": "module",
   "files": [
-<<<<<<< Updated upstream
-    "src"
-  ],
-  "main": "./src/index.ts",
-  "module": "./src/index.ts",
-  "exports": "./src/index.ts",
-=======
     "dist"
   ],
   "main": "./dist/vue-input-components.cjs.js",
@@ -43,7 +36,6 @@
     "./styles.css": "./dist/vue-input-components.css",
     "./styles": "./dist/vue-input-components.css"
   },
->>>>>>> Stashed changes
   "sideEffects": [
     "**/*.css"
   ],
