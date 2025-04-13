@@ -23,7 +23,7 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'VueInputComponents',
       fileName: (format) => `vue-input-components.${format}.js`,
-      formats: ['es', 'umd'],
+      formats: ['cjs', 'es', 'umd'],
     },
     cssCodeSplit: false,
     rollupOptions: {

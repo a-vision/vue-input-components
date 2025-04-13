@@ -1,6 +1,6 @@
 {
   "name": "@a-vision-software/vue-input-components",
-  "version": "1.1.36",
+  "version": "1.1.42",
   "description": "A collection of reusable Vue 3 input components with TypeScript support",
   "author": "A-Vision Software",
   "license": "MIT",
@@ -20,17 +20,19 @@
     "dist",
     "src"
   ],
-  "main": "./dist/vue-input-components.es.js",
+  "main": "./dist/vue-input-components.cjs.js",
   "module": "./dist/vue-input-components.es.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/vue-input-components.es.js",
+      "import": "./dist/vue-input-components.cjs.js",
+      "default": "./dist/vue-input-components.es.js",
       "require": "./dist/vue-input-components.umd.js"
     },
     "./style": "./dist/vue-input-components.css",
-    "./dist/*": "./dist/*"
+    "./dist/*": "./dist/*",
+    "./package.json": "./package.json"
   },
   "sideEffects": [
     "**/*.css"
