@@ -13,13 +13,10 @@
         'action--link': isLink,
         'action--small': size === 'small',
         'action--large': size === 'large',
+        'action--transparent': variant === 'transparent',
       },
     ]"
-    :style="{
-      backgroundColor: isLink ? 'transparent' : color,
-      color: isLink ? color : 'rgba(255, 255, 255, 0.8)',
-      borderColor: isLink ? 'transparent' : color,
-    }"
+    :style="buttonStyle"
     :disabled="disabled"
     @click="handleClick"
   >
@@ -39,6 +36,7 @@ interface ActionProps {
   disabled?: boolean
   color?: string
   size?: 'small' | 'regular' | 'large'
+  variant?: 'solid' | 'transparent'
 }
 
 const props = withDefaults(defineProps<ActionProps>(), {
@@ -49,6 +47,7 @@ const props = withDefaults(defineProps<ActionProps>(), {
   disabled: false,
   color: 'var(--primary)',
   size: 'regular',
+  variant: 'solid',
 })
 
 const emit = defineEmits<{
@@ -56,6 +55,30 @@ const emit = defineEmits<{
 }>()
 
 const isLink = computed(() => !!props.href)
+
+const buttonStyle = computed(() => {
+  if (!props.color) return {}
+
+  if (props.variant === 'transparent') {
+    return {
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      color: props.color,
+      borderColor: props.color,
+    }
+  }
+
+  return props.href
+    ? {
+        color: props.color,
+        borderColor: 'transparent',
+        backgroundColor: 'transparent',
+      }
+    : {
+        color: 'rgba(255, 255, 255, 0.8)',
+        borderColor: props.color,
+        backgroundColor: props.color,
+      }
+})
 
 const handleClick = (event: MouseEvent) => {
   if (!props.disabled) {
@@ -164,6 +187,10 @@ const handleClick = (event: MouseEvent) => {
 
 .action--link .action__label {
   text-decoration: underline;
+}
+
+.action--transparent:hover:not(.action--disabled) {
+  background-color: rgba(255, 255, 255, 0.15);
 }
 
 .action__icon {

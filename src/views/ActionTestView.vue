@@ -24,6 +24,7 @@
             icon="save"
             label="Save"
             :color="actionColor"
+            variant="transparent"
             @click="handleActionClick('Save')"
           />
           <Action

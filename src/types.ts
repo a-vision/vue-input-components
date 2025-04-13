@@ -62,6 +62,7 @@ export interface ActionProps {
   disabled?: boolean
   color?: string
   size?: 'small' | 'regular' | 'large'
+  variant?: 'solid' | 'transparent'
 }
 
 export type ActionComponent = {
