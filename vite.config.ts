@@ -1,18 +1,50 @@
-import { fileURLToPath, URL } from 'node:url'
-
+import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vueDevTools from 'vite-plugin-vue-devtools'
+import dts from 'vite-plugin-dts'
 
-// https://vite.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
-    vueDevTools(),
+    dts({
+      include: ['src'],
+      exclude: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
+      beforeWriteFile: (filePath, content) => {
+        return {
+          filePath,
+          content: content.replace(/\.vue/g, ''),
+        }
+      },
+    }),
   ],
+  build: {
+    lib: {
+      entry: resolve(__dirname, 'src/index.ts'),
+      name: 'VueInputComponents',
+      fileName: (format) => `vue-input-components.${format}.js`,
+      formats: ['cjs', 'es', 'umd'],
+    },
+    cssCodeSplit: false,
+    rollupOptions: {
+      external: ['vue'],
+      output: {
+        exports: 'named',
+        globals: {
+          vue: 'Vue',
+        },
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name === 'style.css') {
+            return 'vue-input-components.css'
+          }
+          return assetInfo.name || ''
+        },
+      },
+    },
+  },
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': resolve(__dirname, 'src'),
     },
   },
 })

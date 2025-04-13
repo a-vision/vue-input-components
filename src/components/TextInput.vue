@@ -80,7 +80,7 @@ const props = defineProps<{
   disabled?: boolean
   error?: string
   success?: string
-  labelPosition?: 'top' | 'left' | 'right' | 'bottom'
+  labelPosition?: 'top' | 'left'
   labelAlign?: 'left' | 'right' | 'center'
   totalWidth?: string
   inputWidth?: string
@@ -241,6 +241,7 @@ onUnmounted(() => {
   transition: all 0.2s ease;
   width: 100%;
   min-height: 2rem;
+  background: var(--input-bg-color);
 }
 
 .input-wrapper.has-icon {
@@ -331,12 +332,12 @@ onUnmounted(() => {
 
 .status-indicator {
   position: absolute;
-  top: -4px;
+  top: -0.1rem;
   right: 0.5rem;
   font-size: 0.75rem;
   color: var(--text-muted);
-  line-height: 4px;
-  background-color: white;
+  line-height: 0px;
+  background-color: var(--input-bg-color);
   padding: 0 0.25rem;
 }
 

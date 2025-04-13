@@ -1,6 +1,12 @@
 <template>
   <div class="file-upload-test">
-    <h1>File Upload Test</h1>
+    <div class="header">
+      <router-link to="/" class="back-link">
+        <font-awesome-icon icon="home" />
+        <span>Back to Dashboard</span>
+      </router-link>
+      <h1>File Upload Test</h1>
+    </div>
     <div class="file-upload-grid">
       <div class="upload-section">
         <h2>Basic Upload</h2>
@@ -80,6 +86,11 @@ const handleStartUpload = (files: File[]) => {
 <style scoped>
 .file-upload-test {
   padding: 2rem;
+  min-height: 100vh;
+  background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80&w=2070');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 .file-upload-grid {
@@ -90,10 +101,11 @@ const handleStartUpload = (files: File[]) => {
 }
 
 .upload-section {
-  background: #f8f9fa;
+  background: rgba(255, 255, 255, 0.8);
   padding: 2rem;
   border-radius: 0.75rem;
-  border: 1px solid #e9ecef;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
 }
 
 .upload-section h2 {
@@ -118,5 +130,48 @@ const handleStartUpload = (files: File[]) => {
   background-color: #f8d7da;
   color: #721c24;
   border: 1px solid #f5c6cb;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+}
+
+.error {
+  color: var(--error-color);
+  background-color: var(--error-color-light);
+  border: 1px solid var(--error-color);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: var(--primary-color);
+}
+
+h1 {
+  margin: 0;
+  color: #212529;
 }
 </style>
