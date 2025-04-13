@@ -60,6 +60,7 @@ export interface ActionProps {
   href?: string
   type?: 'button' | 'submit' | 'reset'
   disabled?: boolean
+  color?: string
 }
 
 export type ActionComponent = {

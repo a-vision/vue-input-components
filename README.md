@@ -1,36 +1,16 @@
 # Vue Input Components
 
-A collection of reusable Vue 3 input components with TypeScript support.
+A collection of reusable Vue 3 input components with TypeScript support, designed for modern web applications.
 
 ## Features
 
-### TextInput Component
-
-- Customizable label position (top, left)
-- Label alignment options (left, right, center)
-- Icon support with click-to-focus functionality
-- Error and success states with messages
-- Required field indicator
-- Autosave functionality with debounce
-- Change indicators (saved, changed)
-- Fully responsive
-- Accessible
-- TypeScript support
-- Multiline text input support (textarea)
-- Adjustable number of visible rows
-- Optional maximum length limit
-- Vertical resizing support
-
-### FileUpload Component
-
-- Drag and drop file upload
-- File size validation (20MB limit)
-- Multiple file selection
-- Progress bar for upload status
-- Customizable icons
-- Automatic or manual upload modes
-- File list display with sizes
-- Error handling and status messages
+- 🚀 Built with Vue 3 and TypeScript
+- 🎨 Customizable styling with CSS variables
+- 📦 Tree-shakeable components
+- 🎯 Fully typed with TypeScript
+- 🎨 Beautiful and consistent design
+- 🔍 Accessible by default
+- 📱 Responsive and mobile-friendly
 
 ## Installation
 
@@ -38,284 +18,157 @@ A collection of reusable Vue 3 input components with TypeScript support.
 npm install @a-vision-software/vue-input-components
 ```
 
-## Quick Start
+## Usage
 
-1. Import the components in your Vue application:
+### Import Styles
 
-   ```vue
-   <script setup>
-   import { TextInput, FileUpload } from '@a-vision-software/vue-input-components'
-   </script>
-   ```
-
-2. Import the color variables in your main CSS file:
-
-   ```css
-   @import '@a-vision-software/vue-input-components/dist/colors.css';
-   ```
-
-3. Use the components in your template:
-
-   ```vue
-   <template>
-     <TextInput v-model="username" label="Username" icon="user" :required="true" />
-
-     <FileUpload
-       icon="upload"
-       upload-url="https://api.example.com/upload"
-       @upload-complete="handleUploadComplete"
-     />
-   </template>
-   ```
-
-## Development
-
-```bash
-npm run dev
+```typescript
+import '@a-vision-software/vue-input-components/styles.css'
 ```
 
-## Build
+### Import Components
 
-```bash
-npm run build
+```typescript
+import { TextInput, FileUpload, Action } from '@a-vision-software/vue-input-components'
 ```
 
 ## Components
 
 ### TextInput
 
-Basic text input component with advanced features, including textarea support.
+A versatile text input component with validation and error handling.
+
+```vue
+<template>
+  <TextInput
+    v-model="value"
+    label="Username"
+    placeholder="Enter your username"
+    :error="error"
+    :disabled="false"
+  />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { TextInput } from '@a-vision-software/vue-input-components'
+
+const value = ref('')
+const error = ref('')
+</script>
+```
 
 #### Props
 
-| Prop          | Type                             | Default   | Description                                |
-| ------------- | -------------------------------- | --------- | ------------------------------------------ |
-| modelValue    | string                           | required  | The input value (v-model)                  |
-| label         | string                           | undefined | Input label                                |
-| type          | string                           | 'text'    | Input type (text, password, email, etc.)   |
-| icon          | string                           | undefined | Font Awesome icon name                     |
-| placeholder   | string                           | undefined | Input placeholder                          |
-| required      | boolean                          | false     | Whether the field is required              |
-| disabled      | boolean                          | false     | Whether the field is disabled              |
-| error         | string                           | undefined | Error message                              |
-| success       | string                           | undefined | Success message                            |
-| labelPosition | 'top' \| 'left'                  | 'top'     | Label position                             |
-| labelAlign    | 'left' \| 'right' \| 'center'    | 'left'    | Label text alignment                       |
-| totalWidth    | string                           | '100%'    | Total width of the component               |
-| inputWidth    | string                           | undefined | Width of the input field                   |
-| labelWidth    | string                           | undefined | Width of the label (when position is left) |
-| autosave      | (value: string) => Promise<void> | undefined | Autosave callback function                 |
-| isTextarea    | boolean                          | false     | Whether to render as a textarea            |
-| maxHeight     | string                           | '14rem'   | Maximum height for textarea                |
-| height        | string                           | '5.5rem'  | Initial height for textarea                |
-
-#### Events
-
-| Event             | Payload | Description                                         |
-| ----------------- | ------- | --------------------------------------------------- |
-| update:modelValue | string  | Emitted when the input value changes                |
-| changed           | void    | Emitted when the value has changed (500ms debounce) |
-| saved             | void    | Emitted when autosave completes successfully        |
-
-#### Examples
-
-##### Basic Text Input
-
-```vue
-<template>
-  <TextInput
-    v-model="username"
-    label="Username"
-    type="text"
-    icon="user"
-    placeholder="Enter your username"
-    :error="usernameError"
-    :autosave="handleUsernameAutosave"
-    label-position="top"
-    label-align="left"
-    required
-  />
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { TextInput } from '@a-vision-software/vue-input-components'
-
-const username = ref('')
-const usernameError = ref('')
-
-const handleUsernameAutosave = async (value: string) => {
-  // Your autosave logic here
-}
-</script>
-```
-
-##### Textarea Input
-
-```vue
-<template>
-  <TextInput
-    v-model="description"
-    label="Description"
-    icon="pen"
-    placeholder="Enter a detailed description"
-    :isTextarea="true"
-    :error="descriptionError"
-    :autosave="handleDescriptionAutosave"
-    label-position="top"
-    label-align="left"
-    required
-  />
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { TextInput } from '@a-vision-software/vue-input-components'
-
-const description = ref('')
-const descriptionError = ref('')
-
-const handleDescriptionAutosave = async (value: string) => {
-  // Your autosave logic here
-}
-</script>
-```
+| Prop          | Type                                                            | Default  | Description                   |
+| ------------- | --------------------------------------------------------------- | -------- | ----------------------------- |
+| `modelValue`  | `string`                                                        | `''`     | The input value               |
+| `label`       | `string`                                                        | `''`     | The input label               |
+| `placeholder` | `string`                                                        | `''`     | The input placeholder         |
+| `error`       | `string`                                                        | `''`     | Error message to display      |
+| `disabled`    | `boolean`                                                       | `false`  | Whether the input is disabled |
+| `required`    | `boolean`                                                       | `false`  | Whether the input is required |
+| `type`        | `'text' \| 'password' \| 'email' \| 'number' \| 'tel' \| 'url'` | `'text'` | The input type                |
 
 ### FileUpload
 
-Flexible file upload component with drag and drop support.
+A file upload component with drag-and-drop support and file type validation.
+
+```vue
+<template>
+  <FileUpload
+    v-model="files"
+    accept="image/*"
+    :multiple="true"
+    :max-size="5 * 1024 * 1024"
+    @error="handleError"
+  />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { FileUpload } from '@a-vision-software/vue-input-components'
+
+const files = ref<File[]>([])
+
+const handleError = (error: string) => {
+  console.error(error)
+}
+</script>
+```
 
 #### Props
 
-| Prop        | Type   | Required | Default  | Description                                                            |
-| ----------- | ------ | -------- | -------- | ---------------------------------------------------------------------- |
-| `icon`      | string | No       | 'upload' | Font Awesome icon name to display                                      |
-| `uploadUrl` | string | No       | -        | URL to upload files to. If not provided, manual upload mode is enabled |
+| Prop         | Type      | Default           | Description                            |
+| ------------ | --------- | ----------------- | -------------------------------------- |
+| `modelValue` | `File[]`  | `[]`              | The selected files                     |
+| `accept`     | `string`  | `'*'`             | Accepted file types                    |
+| `multiple`   | `boolean` | `false`           | Whether multiple files can be selected |
+| `max-size`   | `number`  | `5 * 1024 * 1024` | Maximum file size in bytes             |
+| `disabled`   | `boolean` | `false`           | Whether the upload is disabled         |
 
-#### Events
+### Action
 
-| Event             | Parameters      | Description                                         |
-| ----------------- | --------------- | --------------------------------------------------- |
-| `upload-complete` | `files: File[]` | Emitted when files are successfully uploaded        |
-| `upload-error`    | `error: string` | Emitted when an upload error occurs                 |
-| `files-selected`  | `files: File[]` | Emitted when files are selected (manual mode)       |
-| `start-upload`    | `files: File[]` | Emitted when upload button is clicked (manual mode) |
-
-#### Examples
-
-##### Automatic Upload Mode
+A versatile action component that can be used as a button or link with customizable colors and icons.
 
 ```vue
 <template>
-  <FileUpload
-    icon="upload"
-    upload-url="https://api.example.com/upload"
-    @upload-complete="handleUploadComplete"
-    @upload-error="handleUploadError"
-  />
+  <Action icon="save" label="Save Changes" :color="'#4CAF50'" @click="handleSave" />
 </template>
 
-<script setup>
-import { FileUpload } from '@a-vision-software/vue-input-components'
+<script setup lang="ts">
+import { Action } from '@a-vision-software/vue-input-components'
 
-const handleUploadComplete = (files) => {
-  console.log('Uploaded files:', files)
-}
-
-const handleUploadError = (error) => {
-  console.error('Upload error:', error)
+const handleSave = () => {
+  console.log('Saving changes...')
 }
 </script>
 ```
 
-##### Manual Upload Mode
+#### Props
 
-```vue
-<template>
-  <FileUpload
-    icon="image"
-    @files-selected="handleFilesSelected"
-    @start-upload="handleStartUpload"
-  />
-</template>
-
-<script setup>
-import { FileUpload } from '@a-vision-software/vue-input-components'
-
-const handleFilesSelected = (files) => {
-  console.log('Selected files:', files)
-}
-
-const handleStartUpload = (files) => {
-  // Implement your custom upload logic here
-  console.log('Starting upload for:', files)
-}
-</script>
-```
+| Prop       | Type                              | Default     | Description                    |
+| ---------- | --------------------------------- | ----------- | ------------------------------ |
+| `icon`     | `string`                          | `''`        | Font Awesome icon name         |
+| `label`    | `string`                          | `''`        | Action label text              |
+| `color`    | `string`                          | `'#4CAF50'` | Custom color for the action    |
+| `disabled` | `boolean`                         | `false`     | Whether the action is disabled |
+| `href`     | `string`                          | `''`        | URL for link actions           |
+| `type`     | `'button' \| 'submit' \| 'reset'` | `'button'`  | Button type                    |
 
 ## Styling
 
-All components use CSS variables for theming. You can customize the colors by overriding these variables in your application's CSS:
+The components use CSS variables for easy customization. You can override these variables in your application:
 
 ```css
 :root {
-  /* Base colors */
-  --primary-color: #3498db;
-  --primary-color-light: rgba(52, 152, 219, 0.2);
-  --secondary-color: #2ecc71;
-
-  /* Text colors */
-  --text-color: #2c3e50;
-  --text-color-light: #7f8c8d;
-
-  /* UI colors */
-  --border-color: #dcdfe6;
-  --icon-color: #95a5a6;
-
-  /* State colors */
-  --error-color: #e74c3c;
-  --error-color-light: rgba(231, 76, 60, 0.2);
-  --success-color: #2ecc71;
-  --success-color-light: rgba(46, 204, 113, 0.2);
-  --warning-color: #f1c40f;
-  --warning-color-light: rgba(241, 196, 15, 0.2);
-
-  /* Background colors */
-  --disabled-color: #bdc3c7;
-  --disabled-background: #f5f7fa;
-  --card-bg: #ffffff;
-  --background-color: #f8f9fa;
-
-  /* Input colors */
-  --input-bg-color: rgba(255, 255, 255, 0.8);
-  --input-bg-hover: rgba(0, 0, 0, 0.05);
-  --input-bg-disabled: rgba(0, 0, 0, 0.05);
-
-  /* File Upload specific colors */
-  --upload-border-color: var(--border-color);
-  --upload-bg-color: var(--background-color);
-  --upload-dragging-border-color: var(--primary-color);
-  --upload-dragging-bg-color: var(--primary-color-light);
-  --upload-has-files-border-color: var(--success-color);
-  --upload-has-files-bg-color: var(--success-color-light);
-  --upload-icon-color: var(--icon-color);
-  --upload-text-color: var(--text-color-light);
-  --progress-bg-color: var(--disabled-background);
-  --progress-color: var(--primary-color);
+  --primary-color: #4caf50;
+  --text-primary: #333;
+  --text-secondary: #666;
+  --border-color: #ddd;
+  --input-bg: #fff;
+  --error-color: #f44336;
 }
 ```
 
-## Browser Support
+## Development
 
-All components use modern browser features and should work in all modern browsers that support:
+### Setup
 
-- CSS Variables
-- Flexbox
-- File API (for FileUpload)
-- Drag and Drop API (for FileUpload)
-- FormData (for FileUpload)
-- XMLHttpRequest (for FileUpload)
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Run tests
+npm run test
+```
 
 ## License
 
-MIT
+MIT © [A-Vision Software](https://github.com/a-vision)
