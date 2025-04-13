@@ -22,16 +22,11 @@
   ],
   "type": "module",
   "files": [
-    "dist",
     "src"
   ],
   "main": "./src/index.ts",
   "module": "./src/index.ts",
-  "exports": {
-    ".": "./src/index.ts",
-    "./package.json": "./package.json",
-    "./style": "./src/assets/*.css"
-  },
+  "exports": "./src/index.ts",
   "sideEffects": [
     "**/*.css"
   ],
