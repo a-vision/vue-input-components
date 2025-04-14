@@ -21,6 +21,7 @@
       '--navigation-bottom-border': showBottomBorder
         ? `1px solid ${bottomBorderColor || 'rgba(0, 0, 0, 0.2)'}`
         : 'none',
+      '--navigation-tiles-grid': navigationGrid,
     }"
   >
     <template v-if="type === 'tiles'">
@@ -38,10 +39,10 @@
           ]"
           :style="{
             '--item-alignment': item.alignment || activeItemAlignment,
-            width: item.width || '200px',
-            'min-width': item.width || '200px',
-            'max-width': item.width || '200px',
-            'grid-column': `span ${Math.ceil(parseInt(item.width || '200px') / 200)}`,
+            width: item.width || '150px',
+            'min-width': item.width || '150px',
+            'max-width': item.width || '150px',
+            'grid-column': `span ${Math.ceil(parseInt(item.width || '150px') / 150)}`,
           }"
           @click="(e) => !item.id.includes('spacer') && handleItemClick(item, e)"
         >
@@ -53,7 +54,13 @@
             }"
           >
             <div v-if="item.icon" class="navigation__icon">
-              <font-awesome-icon :icon="item.icon" />
+              <img
+                v-if="item.icon.startsWith('img:')"
+                :src="item.icon.substring(4)"
+                :alt="item.label || 'Icon'"
+                class="navigation__icon-image"
+              />
+              <font-awesome-icon v-else :icon="item.icon" />
             </div>
             <div v-if="item.label" class="navigation__label">
               <span>{{ item.label }}</span>
@@ -61,6 +68,9 @@
                 <font-awesome-icon icon="chevron-down" />
               </div>
             </div>
+          </div>
+          <div v-if="item.url" class="navigation__external-link" @click.stop="openUrl(item.url)">
+            <font-awesome-icon icon="square-up-right" />
           </div>
           <div
             v-if="item.children && isDropdownOpen(item.id)"
@@ -80,7 +90,13 @@
               @click="(e) => handleItemClick(child, e)"
             >
               <div v-if="child.icon" class="navigation__icon">
-                <font-awesome-icon :icon="child.icon" />
+                <img
+                  v-if="child.icon.startsWith('img:')"
+                  :src="child.icon.substring(4)"
+                  :alt="child.label || 'Icon'"
+                  class="navigation__icon-image"
+                />
+                <font-awesome-icon v-else :icon="child.icon" />
               </div>
               <div v-if="child.label" class="navigation__label">{{ child.label }}</div>
             </div>
@@ -115,7 +131,13 @@
             @click="(e) => handleItemClick(item, e)"
           >
             <div v-if="item.icon" class="navigation__icon">
-              <font-awesome-icon :icon="item.icon" />
+              <img
+                v-if="item.icon.startsWith('img:')"
+                :src="item.icon.substring(4)"
+                :alt="item.label || 'Icon'"
+                class="navigation__icon-image"
+              />
+              <font-awesome-icon v-else :icon="item.icon" />
             </div>
             <div v-if="item.label" class="navigation__label">
               <span>{{ item.label }}</span>
@@ -123,6 +145,9 @@
                 <font-awesome-icon icon="chevron-down" />
               </div>
             </div>
+          </div>
+          <div v-if="item.url" class="navigation__external-link" @click.stop="openUrl(item.url)">
+            <font-awesome-icon icon="square-up-right" />
           </div>
           <div
             v-if="item.children && isDropdownOpen(item.id)"
@@ -142,7 +167,13 @@
               @click="(e) => handleItemClick(child, e)"
             >
               <div v-if="child.icon" class="navigation__icon">
-                <font-awesome-icon :icon="child.icon" />
+                <img
+                  v-if="child.icon.startsWith('img:')"
+                  :src="child.icon.substring(4)"
+                  :alt="child.label || 'Icon'"
+                  class="navigation__icon-image"
+                />
+                <font-awesome-icon v-else :icon="child.icon" />
               </div>
               <div v-if="child.label" class="navigation__label">{{ child.label }}</div>
             </div>
@@ -174,6 +205,10 @@ const sortedItems = computed(() => {
   })
 })
 
+const navigationGrid = computed(() => {
+  return props.items.map((item) => item.width || '150px').join(' ')
+})
+
 const handleItemClick = (item: NavigationItem, event: MouseEvent) => {
   if (item.disabled) return
 
@@ -188,6 +223,10 @@ const handleItemClick = (item: NavigationItem, event: MouseEvent) => {
   } else {
     openDropdownId.value = null
   }
+}
+
+const openUrl = (url: string) => {
+  window.open(url, '_blank')
 }
 
 const isDropdownOpen = (itemId: string) => {
@@ -234,7 +273,7 @@ onUnmounted(() => {
 /* Tiles */
 .navigation__tiles {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: var(--navigation-tiles-grid);
   gap: var(--navigation-gap);
   width: 100%;
   height: var(--navigation-height, auto);
@@ -265,6 +304,9 @@ onUnmounted(() => {
   border-color: var(--navigation-active-color);
   color: var(--navigation-active-color);
   background-color: var(--navigation-active-background-color);
+  box-shadow:
+    -5px 0 3px -3px rgba(0, 0, 0, 0.1),
+    5px 0 3px -3px rgba(0, 0, 0, 0.1);
 }
 
 .navigation__tile--disabled {
@@ -351,7 +393,7 @@ onUnmounted(() => {
   position: absolute;
   top: 100%;
   left: 0;
-  min-width: 200px;
+  min-width: 150px;
   background: white;
   border: 1px solid var(--navigation-color);
   border-radius: var(--navigation-border-radius);
@@ -408,11 +450,22 @@ onUnmounted(() => {
   justify-content: center;
 }
 
+.navigation__icon-image {
+  width: 1.2em;
+  height: 1.2em;
+  object-fit: contain;
+}
+
 .navigation--large-icons .navigation__icon {
   font-size: 2.5rem;
   margin-bottom: 0.5rem;
   margin-left: 0;
   margin-right: 0;
+}
+
+.navigation--large-icons .navigation__icon-image {
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 .navigation--large-icons .navigation__tile-content,
@@ -546,5 +599,23 @@ onUnmounted(() => {
   opacity: 0.5;
   cursor: not-allowed;
   color: var(--navigation-disabled-color);
+}
+
+.navigation__external-link {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-size: 1.6em;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.navigation__external-link:hover {
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.navigation__tile:hover .navigation__external-link {
+  color: rgba(0, 0, 0, 0.3);
 }
 </style>

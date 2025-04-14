@@ -15,9 +15,10 @@
         iconSize="large"
         height="90px"
         backgroundColor="#fff"
+        activeBackgroundColor="var(--background-color)"
       />
       <div v-if="lastClicked.default" class="click-info">
-        Last clicked: {{ lastClicked.default.label }}
+        Last clicked: {{ lastClicked.default.url || `id:${lastClicked.default.id}` }}
       </div>
     </div>
 
@@ -106,15 +107,24 @@ const lastClicked = ref({
 
 const defaultItems = [
   {
+    id: 'home',
+    label: '',
+    icon: 'img:/src/assets/logo.svg',
+    width: '150px',
+  },
+  {
     id: 'dashboard',
     label: 'Dashboard',
     url: '/dashboard',
     icon: 'gauge-high',
+    width: '150px',
   },
   {
     id: 'reports',
     label: 'Reports',
     disabled: true,
+    icon: 'chart-simple',
+    width: '150px',
   },
   {
     id: 'spacer',
@@ -125,6 +135,8 @@ const defaultItems = [
     id: 'messages',
     label: 'Messages',
     alignment: 'right',
+    icon: 'envelope',
+    width: '150px',
     children: [
       {
         id: 'inbox',
@@ -141,6 +153,7 @@ const defaultItems = [
     label: 'Settings',
     alignment: 'right',
     icon: 'sliders',
+    width: '150px',
     children: [
       {
         id: 'profile',
