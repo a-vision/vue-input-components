@@ -440,7 +440,15 @@ onUnmounted(() => {
 
 .navigation__dropdown-item .navigation__icon {
   margin-left: 0;
-  margin-right: 1rem;
+  margin: 0.5rem !important;
+  font-size: 1.2rem !important;
+}
+
+.navigation__dropdown-item .navigation__icon-image {
+  width: 1.2rem !important;
+  height: 1.2rem !important;
+  object-fit: contain;
+  margin: 0.5rem !important;
 }
 
 .navigation__dropdown-item:hover {
@@ -557,11 +565,6 @@ onUnmounted(() => {
 .navigation__dropdown-item .navigation__label {
   text-align: center;
   justify-content: center;
-}
-
-.navigation__dropdown-item .navigation__icon {
-  margin-left: 0;
-  margin-right: 1rem;
 }
 
 .navigation__tile--open .navigation__dropdown-arrow,

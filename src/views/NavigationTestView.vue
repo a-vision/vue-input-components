@@ -137,10 +137,12 @@ const defaultItems: NavigationItem[] = [
       {
         id: 'about-1',
         label: 'About 1',
+        icon: 'info',
       },
       {
         id: 'about-2',
         label: 'About 2',
+        icon: 'square-up-right',
       },
     ],
   },
