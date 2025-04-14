@@ -42,7 +42,7 @@
             width: item.width || '150px',
             'min-width': item.width || '150px',
             'max-width': item.width || '150px',
-            'grid-column': `span ${Math.ceil(parseInt(item.width || '150px') / 150)}`,
+            'grid-column': item.alignment === 'right' ? `${index - items.length}` : `auto`,
           }"
           @click="(e) => !item.id.includes('spacer') && handleItemClick(item, e)"
         >
@@ -69,7 +69,11 @@
               </div>
             </div>
           </div>
-          <div v-if="item.url" class="navigation__external-link" @click.stop="openUrl(item.url)">
+          <div
+            v-if="item.url && parseInt(height || '0') >= 80"
+            class="navigation__external-link"
+            @click.stop="openUrl(item.url)"
+          >
             <font-awesome-icon icon="square-up-right" />
           </div>
           <div
@@ -146,7 +150,11 @@
               </div>
             </div>
           </div>
-          <div v-if="item.url" class="navigation__external-link" @click.stop="openUrl(item.url)">
+          <div
+            v-if="item.url && parseInt(height || '0') >= 80"
+            class="navigation__external-link"
+            @click.stop="openUrl(item.url)"
+          >
             <font-awesome-icon icon="square-up-right" />
           </div>
           <div
@@ -206,7 +214,7 @@ const sortedItems = computed(() => {
 })
 
 const navigationGrid = computed(() => {
-  return props.items.map((item) => item.width || '150px').join(' ')
+  return sortedItems.value.map((item) => item.width || '150px').join(' ')
 })
 
 const handleItemClick = (item: NavigationItem, event: MouseEvent) => {

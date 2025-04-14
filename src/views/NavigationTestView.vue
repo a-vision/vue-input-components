@@ -91,6 +91,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { NavigationItem } from '../types/navigation'
 import Navigation from '@/components/Navigation.vue'
 
 const activeDefaultItem = ref('')
@@ -98,218 +99,149 @@ const activeTabsItem = ref('')
 const activeDropdownItem = ref('')
 const activeCustomItem = ref('')
 
-const lastClicked = ref({
-  default: null,
-  tabs: null,
-  dropdown: null,
-  custom: null,
+const lastClicked = ref<Record<string, NavigationItem>>({
+  default: {} as NavigationItem,
+  tabs: {} as NavigationItem,
+  dropdown: {} as NavigationItem,
+  custom: {} as NavigationItem,
 })
 
-const defaultItems = [
+const defaultItems: NavigationItem[] = [
   {
     id: 'home',
-    label: '',
-    icon: 'img:/src/assets/logo.svg',
+    label: 'Home',
+    icon: 'house',
     width: '150px',
   },
   {
     id: 'dashboard',
     label: 'Dashboard',
-    url: '/dashboard',
     icon: 'gauge-high',
-    width: '150px',
-  },
-  {
-    id: 'reports',
-    label: 'Reports',
-    disabled: true,
-    icon: 'chart-simple',
-    width: '150px',
+    width: '200px',
   },
   {
     id: 'spacer',
     label: '',
-    width: 'auto',
+    width: '1fr',
   },
   {
-    id: 'messages',
-    label: 'Messages',
+    id: 'about',
+    label: 'About',
+    url: 'https://example.com',
+    icon: 'info',
     alignment: 'right',
+    width: '150px',
+    children: [
+      {
+        id: 'about-1',
+        label: 'About 1',
+      },
+      {
+        id: 'about-2',
+        label: 'About 2',
+      },
+    ],
+  },
+  {
+    id: 'contact',
+    label: 'Contact',
     icon: 'envelope',
     width: '150px',
-    children: [
-      {
-        id: 'inbox',
-        label: 'Inbox',
-      },
-      {
-        id: 'sent',
-        label: 'Sent',
-      },
-    ],
-  },
-  {
-    id: 'settings',
-    label: 'Settings',
     alignment: 'right',
-    icon: 'sliders',
-    width: '150px',
-    children: [
-      {
-        id: 'profile',
-        label: 'Profile',
-      },
-      {
-        id: 'security',
-        label: 'Security',
-      },
-    ],
   },
 ]
 
-const mixedAlignmentItems = [
+const mixedAlignmentItems: NavigationItem[] = [
   {
-    id: 'dashboard',
-    label: 'Dashboard',
-    url: '/dashboard',
-    icon: 'gauge-high',
+    id: 'home',
+    label: 'Home',
+    url: 'https://example.com',
+    icon: 'house',
+  },
+  {
+    id: 'about',
+    label: 'About',
+    width: '200px',
+    children: [
+      {
+        id: 'about-1',
+        label: 'About 1',
+      },
+      {
+        id: 'about-2',
+        label: 'About 2',
+      },
+    ],
   },
   {
     id: 'spacer',
     label: '',
-    width: 'auto',
+    width: '1fr',
   },
   {
-    id: 'settings',
-    label: 'Settings',
-    alignment: 'right',
-    icon: 'sliders',
-    children: [
-      {
-        id: 'profile',
-        label: 'Profile',
-      },
-      {
-        id: 'security',
-        label: 'Security',
-      },
-    ],
-  },
-  {
-    id: 'reports',
-    label: 'Reports',
-    disabled: true,
+    id: 'contact',
+    label: 'Contact',
+    icon: 'envelope',
     alignment: 'right',
   },
+]
+
+const dropdownItems: NavigationItem[] = [
   {
-    id: 'messages',
-    label: 'Messages',
+    id: 'home',
+    label: 'Home',
+    url: 'https://example.com',
+    alignment: 'start',
+  },
+  {
+    id: 'about',
+    label: 'About',
+    alignment: 'start',
     children: [
       {
-        id: 'inbox',
-        label: 'Inbox',
+        id: 'about-1',
+        label: 'About 1',
       },
       {
-        id: 'sent',
-        label: 'Sent',
+        id: 'about-2',
+        label: 'About 2',
       },
     ],
   },
 ]
 
-const dropdownItems = [
+const customItems: NavigationItem[] = [
   {
-    id: 'dashboard',
-    label: 'Dashboard',
-    url: '/dashboard',
+    id: 'home',
+    label: 'Home',
+    url: 'https://example.com',
     alignment: 'start',
   },
   {
-    id: 'analytics',
-    label: 'Analytics',
+    id: 'about',
+    label: 'About',
     alignment: 'start',
     children: [
       {
-        id: 'overview',
-        label: 'Overview',
+        id: 'about-1',
+        label: 'About 1',
       },
       {
-        id: 'reports',
-        label: 'Reports',
-      },
-      {
-        id: 'export',
-        label: 'Export',
+        id: 'about-2',
+        label: 'About 2',
       },
     ],
   },
   {
-    id: 'settings',
-    label: 'Settings',
-    alignment: 'end',
-    children: [
-      {
-        id: 'profile',
-        label: 'Profile',
-      },
-      {
-        id: 'security',
-        label: 'Security',
-      },
-      {
-        id: 'notifications',
-        label: 'Notifications',
-      },
-    ],
-  },
-]
-
-const customItems = [
-  {
-    id: 'dashboard',
-    label: 'Dashboard',
-    url: '/dashboard',
-    alignment: 'start',
-  },
-  {
-    id: 'projects',
-    label: 'Projects',
-    alignment: 'start',
-    children: [
-      {
-        id: 'active',
-        label: 'Active',
-      },
-      {
-        id: 'archived',
-        label: 'Archived',
-      },
-    ],
-  },
-  {
-    id: 'team',
-    label: 'Team',
-    alignment: 'end',
-    children: [
-      {
-        id: 'members',
-        label: 'Members',
-      },
-      {
-        id: 'roles',
-        label: 'Roles',
-      },
-    ],
-  },
-  {
-    id: 'help',
-    label: 'Help',
+    id: 'contact',
+    label: 'Contact',
+    icon: 'envelope',
     alignment: 'end',
     disabled: true,
   },
 ]
 
-const handleDefaultClick = (item) => {
+const handleDefaultClick = (item: NavigationItem) => {
   console.log('Default navigation clicked:', item)
   lastClicked.value.default = item
   if (item.url) {
@@ -317,7 +249,7 @@ const handleDefaultClick = (item) => {
   }
 }
 
-const handleTabsClick = (item) => {
+const handleTabsClick = (item: NavigationItem) => {
   console.log('Tabs navigation clicked:', item)
   lastClicked.value.tabs = item
   if (item.url) {
@@ -325,7 +257,7 @@ const handleTabsClick = (item) => {
   }
 }
 
-const handleDropdownClick = (item) => {
+const handleDropdownClick = (item: NavigationItem) => {
   console.log('Dropdown navigation clicked:', item)
   lastClicked.value.dropdown = item
   if (item.url) {
@@ -333,7 +265,7 @@ const handleDropdownClick = (item) => {
   }
 }
 
-const handleCustomClick = (item) => {
+const handleCustomClick = (item: NavigationItem) => {
   console.log('Custom navigation clicked:', item)
   lastClicked.value.custom = item
   if (item.url) {

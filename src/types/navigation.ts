@@ -4,7 +4,7 @@ export interface NavigationItem {
   url?: string
   icon?: string
   disabled?: boolean
-  alignment?: 'left' | 'right'
+  alignment?: 'left' | 'right' | 'start' | 'end'
   width?: string
   children?: NavigationItem[]
 }
