@@ -8,6 +8,7 @@ export interface NavigationItem {
   width?: string
   children?: NavigationItem[]
   hideExternalOpen?: boolean
+  labelSize?: 'small' | 'normal' | 'large'
 }
 
 export interface NavigationProps {

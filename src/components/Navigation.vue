@@ -63,7 +63,14 @@
               />
               <font-awesome-icon v-else :icon="item.icon" />
             </div>
-            <div v-if="item.label" class="navigation__label">
+            <div
+              v-if="item.label"
+              class="navigation__label"
+              :class="{
+                'navigation__label--small': item.labelSize === 'small',
+                'navigation__label--large': item.labelSize === 'large',
+              }"
+            >
               <span>{{ item.label }}</span>
               <div v-if="item.children" class="navigation__dropdown-arrow">
                 <font-awesome-icon icon="chevron-down" />
@@ -103,7 +110,16 @@
                 />
                 <font-awesome-icon v-else :icon="child.icon" />
               </div>
-              <div v-if="child.label" class="navigation__label">{{ child.label }}</div>
+              <div
+                v-if="child.label"
+                class="navigation__label"
+                :class="{
+                  'navigation__label--small': child.labelSize === 'small',
+                  'navigation__label--large': child.labelSize === 'large',
+                }"
+              >
+                {{ child.label }}
+              </div>
             </div>
           </div>
         </div>
@@ -144,7 +160,14 @@
               />
               <font-awesome-icon v-else :icon="item.icon" />
             </div>
-            <div v-if="item.label" class="navigation__label">
+            <div
+              v-if="item.label"
+              class="navigation__label"
+              :class="{
+                'navigation__label--small': item.labelSize === 'small',
+                'navigation__label--large': item.labelSize === 'large',
+              }"
+            >
               <span>{{ item.label }}</span>
               <div v-if="item.children" class="navigation__dropdown-arrow">
                 <font-awesome-icon icon="chevron-down" />
@@ -184,7 +207,16 @@
                 />
                 <font-awesome-icon v-else :icon="child.icon" />
               </div>
-              <div v-if="child.label" class="navigation__label">{{ child.label }}</div>
+              <div
+                v-if="child.label"
+                class="navigation__label"
+                :class="{
+                  'navigation__label--small': child.labelSize === 'small',
+                  'navigation__label--large': child.labelSize === 'large',
+                }"
+              >
+                {{ child.label }}
+              </div>
             </div>
           </div>
         </div>
@@ -555,6 +587,15 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1rem;
+}
+
+.navigation__label--small {
+  font-size: 0.75rem;
+}
+
+.navigation__label--large {
+  font-size: 1.35rem;
 }
 
 .navigation__label span {

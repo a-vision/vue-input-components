@@ -120,6 +120,7 @@ const defaultItems: NavigationItem[] = [
     hideExternalOpen: true,
     icon: 'gauge-high',
     width: '200px',
+    labelSize: 'large',
   },
   {
     id: 'spacer',
@@ -152,6 +153,7 @@ const defaultItems: NavigationItem[] = [
     icon: 'envelope',
     width: '150px',
     alignment: 'right',
+    labelSize: 'small',
   },
 ]
 
