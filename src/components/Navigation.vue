@@ -306,6 +306,11 @@ onUnmounted(() => {
 .navigation__tile:hover {
   border-color: var(--navigation-hover-color);
   color: var(--navigation-hover-color);
+
+  .navigation__tile-content {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: scale(1.05);
+  }
 }
 
 .navigation__tile--active {
