@@ -22,6 +22,7 @@
         ? `1px solid ${bottomBorderColor || 'rgba(0, 0, 0, 0.2)'}`
         : 'none',
       '--navigation-tiles-grid': navigationGrid,
+      'max-height': height,
     }"
   >
     <template v-if="type === 'tiles'">
@@ -70,7 +71,7 @@
             </div>
           </div>
           <div
-            v-if="item.url && parseInt(height || '0') >= 80"
+            v-if="item.url && parseInt(height || '0') >= 80 && !item.hideExternalOpen"
             class="navigation__external-link"
             @click.stop="openUrl(item.url)"
           >
@@ -151,7 +152,7 @@
             </div>
           </div>
           <div
-            v-if="item.url && parseInt(height || '0') >= 80"
+            v-if="item.url && parseInt(height || '0') >= 80 && !item.hideExternalOpen"
             class="navigation__external-link"
             @click.stop="openUrl(item.url)"
           >

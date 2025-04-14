@@ -116,6 +116,8 @@ const defaultItems: NavigationItem[] = [
   {
     id: 'dashboard',
     label: 'Dashboard',
+    url: '/dashboard',
+    hideExternalOpen: true,
     icon: 'gauge-high',
     width: '200px',
   },

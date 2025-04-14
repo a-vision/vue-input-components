@@ -7,6 +7,7 @@ export interface NavigationItem {
   alignment?: 'left' | 'right' | 'start' | 'end'
   width?: string
   children?: NavigationItem[]
+  hideExternalOpen?: boolean
 }
 
 export interface NavigationProps {
