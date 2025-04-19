@@ -22,4 +22,7 @@ export interface DropdownProps {
   padding?: string
   icon?: string
   iconSize?: 'normal' | 'large'
+  required?: boolean
+  error?: string
+  autosave?: (value: string | string[]) => Promise<void>
 }

@@ -6,8 +6,8 @@
 
     <div class="dropdown-test__section">
       <h2>Single Select Dropdown</h2>
-      <Dropdown v-model="selectedSingle" :options="options" placeholder="Select a color" filterable
-        @update:modelValue="handleSingleChange" />
+      <Dropdown v-model="selectedSingle" :options="options" placeholder="Select a color" filterable required
+        @update:modelValue="handleSingleChange" error="This is an error" />
       <div v-if="selectedSingle" class="selection-info">
         Selected: {{ getOptionLabel(selectedSingle) }}
       </div>

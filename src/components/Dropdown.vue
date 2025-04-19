@@ -4,13 +4,14 @@
     'dropdown--disabled': disabled,
     'dropdown--multiple': multiple,
     'dropdown--large-icon': iconSize === 'large',
+    'dropdown--has-error': error,
   }" :style="{
-    '--dropdown-color': color,
+    '--dropdown-color': error ? 'var(--danger-color)' : color,
     '--dropdown-hover-color': hoverColor,
     '--dropdown-active-color': activeColor,
     '--dropdown-disabled-color': disabledColor,
     '--dropdown-background-color': backgroundColor,
-    '--dropdown-border-radius': borderRadius,
+    '--dropdown-border-radius': error ? `${borderRadius} ${borderRadius} 0 0` : borderRadius,
     '--dropdown-padding': padding,
     '--dropdown-max-height': maxHeight,
     '--dropdown-width': width,
@@ -41,6 +42,14 @@
           @click.stop="clearSelection" />
         <font-awesome-icon icon="chevron-down" class="dropdown__arrow" :class="{ 'dropdown__arrow--open': isOpen }" />
       </div>
+      <span v-if="required && !showSaved && !showChanged" class="status-indicator required-indicator">required</span>
+      <transition name="fade">
+        <span v-if="showSaved && !error" class="status-indicator saved-indicator">saved</span>
+      </transition>
+      <transition name="fade">
+        <span v-if="showChanged && !error" class="status-indicator changed-indicator">changed</span>
+      </transition>
+      <div v-if="error" class="error-message">{{ error }}</div>
     </div>
 
     <div v-if="isOpen" class="dropdown__content">
@@ -62,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick, onUnmounted } from 'vue'
 import type { DropdownProps, DropdownOption } from '../types/dropdown'
 
 const props = withDefaults(defineProps<DropdownProps>(), {
@@ -81,10 +90,14 @@ const props = withDefaults(defineProps<DropdownProps>(), {
   padding: '0.5rem',
   icon: '',
   iconSize: 'normal',
+  required: false,
+  error: '',
 })
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string | string[]): void
+  (e: 'changed'): void
+  (e: 'saved'): void
 }>()
 
 const isOpen = ref(false)
@@ -144,8 +157,10 @@ const toggleOption = (option: DropdownOption) => {
       ? currentValue.filter((id) => id !== option.id)
       : [...currentValue, option.id]
     emit('update:modelValue', newValue)
+    debounceAutosave(newValue)
   } else {
     emit('update:modelValue', option.id)
+    debounceAutosave(option.id)
     closeDropdown()
   }
 }
@@ -179,6 +194,66 @@ watch(isOpen, (newValue) => {
     document.removeEventListener('click', handleClickOutside)
   }
 })
+
+const showSaved = ref(false)
+const showChanged = ref(false)
+const isChanged = ref(false)
+const debounceTimer = ref<number | null>(null)
+const changedTimer = ref<number | null>(null)
+
+const handleAutosave = async (value: string | string[]) => {
+  if (props.autosave) {
+    try {
+      await props.autosave(value)
+      if (!props.error) {
+        emit('saved')
+        showSaved.value = true
+        showChanged.value = false
+        setTimeout(() => {
+          showSaved.value = false
+        }, 3000)
+      }
+    } catch (error) {
+      console.error('Autosave failed:', error)
+    }
+  }
+}
+
+const debounceAutosave = (value: string | string[]) => {
+  // Clear existing timers
+  if (debounceTimer.value) {
+    clearTimeout(debounceTimer.value)
+  }
+  if (changedTimer.value) {
+    clearTimeout(changedTimer.value)
+  }
+
+  // Show changed indicator immediately
+  if (!props.error) {
+    showChanged.value = true
+  }
+
+  // Trigger changed event after 500ms
+  changedTimer.value = window.setTimeout(() => {
+    emit('changed')
+    isChanged.value = true
+  }, 500)
+
+  // Trigger autosave after 1500ms
+  debounceTimer.value = window.setTimeout(() => {
+    handleAutosave(value)
+  }, 1500)
+}
+
+// Cleanup timers on unmount
+onUnmounted(() => {
+  if (debounceTimer.value) {
+    clearTimeout(debounceTimer.value)
+  }
+  if (changedTimer.value) {
+    clearTimeout(changedTimer.value)
+  }
+})
 </script>
 
 <style scoped>
@@ -197,10 +272,10 @@ watch(isOpen, (newValue) => {
 }
 
 .dropdown__selected {
+  position: relative;
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  min-height: 2.5rem;
   border: 1px solid var(--dropdown-color);
   border-radius: var(--dropdown-border-radius);
   background-color: var(--dropdown-background-color);
@@ -222,9 +297,9 @@ watch(isOpen, (newValue) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2em;
+  font-size: 1em;
   color: var(--dropdown-color);
-  padding: 0 0.75rem;
+  padding: 0.5rem;
   border-right: 1px solid rgb(from var(--dropdown-color) r g b / 20%);
   grid-column: 1;
   height: 100%;
@@ -236,14 +311,14 @@ watch(isOpen, (newValue) => {
   flex-wrap: wrap;
   gap: 0.25rem;
   min-width: 0;
-  padding: 0.5rem 0.75rem;
+  padding: 0.25rem 0.5rem;
   grid-column: 2;
 }
 
 .dropdown__placeholder {
   color: var(--text-secondary);
   font-style: italic;
-  padding: 0.5rem 0.75rem;
+  padding: 0.25rem 0.5rem;
   grid-column: 2;
 }
 
@@ -396,5 +471,56 @@ watch(isOpen, (newValue) => {
   grid-row: 3;
   justify-content: center;
   padding: 0.75rem 0;
+}
+
+.dropdown__selected.has-error {
+  border-color: var(--danger-color);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.status-indicator {
+  position: absolute;
+  top: -1px;
+  line-height: 1px;
+  right: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background-color: var(--dropdown-background-color);
+  padding: 0 0.25rem;
+}
+
+.saved-indicator {
+  color: var(--success-color);
+}
+
+.changed-indicator {
+  color: var(--warning-color);
+}
+
+.error-message {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.25rem 0.75rem;
+  background-color: var(--danger-color);
+  color: white;
+  font-size: 0.75rem;
+  border-radius: 0 0 0.5rem 0.5rem;
+  transform: translateY(100%);
+  transition: transform 0.2s ease;
+  line-height: var(--line-height);
+  z-index: 1;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

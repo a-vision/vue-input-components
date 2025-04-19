@@ -279,12 +279,16 @@ defineExpose({
   border-color: var(--danger-color);
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+
+  .icon {
+    color: var(--danger-color);
+  }
 }
 
 .icon-wrapper {
   display: grid;
   place-items: start;
-  padding: 1rem;
+  padding: 0.5rem;
   border-right: 1px solid rgb(from var(--border-color) r g b / 20%);
   cursor: pointer;
   overflow: hidden;
@@ -300,7 +304,7 @@ defineExpose({
 }
 
 .input {
-  padding: 0.75rem 1rem;
+  padding: 0.25rem 0.5rem;
   border: none;
   border-radius: 0.5rem;
   outline: none;
@@ -355,7 +359,7 @@ defineExpose({
 
 .status-indicator {
   position: absolute;
-  top: -1px;
+  top: 0px;
   line-height: 1px;
   right: 0.5rem;
   font-size: 0.75rem;
@@ -390,7 +394,7 @@ textarea {
 }
 
 :deep(.dp__input) {
-  padding: 0.75rem 1rem;
+  padding: 0.25rem 0.5rem;
   border: none;
   outline: none;
   font-size: 1rem;
