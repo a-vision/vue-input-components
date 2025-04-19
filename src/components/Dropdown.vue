@@ -7,11 +7,11 @@
     'dropdown--has-error': error,
   }" :style="{
     '--dropdown-color': error ? 'var(--danger-color)' : color,
-    '--dropdown-hover-color': hoverColor,
-    '--dropdown-active-color': activeColor,
+    '--dropdown-hover-color': hoverColor ? hoverColor : 'var(--dropdown-color)',
+    '--dropdown-active-color': activeColor ? activeColor : 'var(--dropdown-color)',
     '--dropdown-disabled-color': disabledColor,
     '--dropdown-background-color': backgroundColor,
-    '--dropdown-border-radius': error ? `${borderRadius} ${borderRadius} 0 0` : borderRadius,
+    '--dropdown-border-radius': borderRadius,
     '--dropdown-padding': padding,
     '--dropdown-max-height': maxHeight,
     '--dropdown-width': width,
@@ -42,14 +42,17 @@
           @click.stop="clearSelection" />
         <font-awesome-icon icon="chevron-down" class="dropdown__arrow" :class="{ 'dropdown__arrow--open': isOpen }" />
       </div>
-      <span v-if="required && !showSaved && !showChanged" class="status-indicator required-indicator">required</span>
+      <span v-if="required && !showSaved && !showChanged && !error"
+        class="status-indicator required-indicator">required</span>
       <transition name="fade">
         <span v-if="showSaved && !error" class="status-indicator saved-indicator">saved</span>
       </transition>
       <transition name="fade">
         <span v-if="showChanged && !error" class="status-indicator changed-indicator">changed</span>
       </transition>
-      <div v-if="error" class="error-message">{{ error }}</div>
+      <transition name="fade">
+        <span v-if="error" class="status-indicator error-indicator" :data-error="error">error</span>
+      </transition>
     </div>
 
     <div v-if="isOpen" class="dropdown__content">
@@ -82,8 +85,8 @@ const props = withDefaults(defineProps<DropdownProps>(), {
   maxHeight: '300px',
   width: '100%',
   color: 'var(--text-primary)',
-  hoverColor: 'var(--primary)',
-  activeColor: 'var(--primary)',
+  hoverColor: '',
+  activeColor: '',
   disabledColor: 'var(--text-disabled)',
   backgroundColor: 'white',
   borderRadius: '0.375rem',
@@ -264,6 +267,39 @@ onUnmounted(() => {
   cursor: pointer;
   user-select: none;
   outline: none;
+
+  &.dropdown--has-error {
+    border-color: var(--danger-color);
+
+    .icon {
+      color: var(--danger-color);
+    }
+
+    &:hover .error-indicator::after {
+      content: attr(data-error);
+      display: block;
+      position: absolute;
+      bottom: 0.25rem;
+      right: 0;
+      padding: 0.25rem 0.75rem;
+      color: white;
+      background-color: var(--danger-color);
+      line-height: var(--line-height);
+      min-width: 200px;
+      border-radius: 0.25rem;
+      z-index: 1;
+    }
+  }
+
+  .dropdown__selected:hover {
+    border-color: var(--dropdown-hover-color);
+    box-shadow: 0 0 2px var(--dropdown-hover-color) inset;
+  }
+
+  .dropdown__selected:focus-within {
+    border-color: var(--dropdown-active-color);
+    box-shadow: 0 0 2px var(--dropdown-hover-color) inset;
+  }
 }
 
 .dropdown--disabled {
@@ -488,30 +524,18 @@ onUnmounted(() => {
   color: var(--text-muted);
   background-color: var(--dropdown-background-color);
   padding: 0 0.25rem;
-}
 
-.saved-indicator {
-  color: var(--success-color);
-}
+  &.saved-indicator {
+    color: var(--success-color);
+  }
 
-.changed-indicator {
-  color: var(--warning-color);
-}
+  &.changed-indicator {
+    color: var(--warning-color);
+  }
 
-.error-message {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 0.25rem 0.75rem;
-  background-color: var(--danger-color);
-  color: white;
-  font-size: 0.75rem;
-  border-radius: 0 0 0.5rem 0.5rem;
-  transform: translateY(100%);
-  transition: transform 0.2s ease;
-  line-height: var(--line-height);
-  z-index: 1;
+  &.error-indicator {
+    color: var(--danger-color);
+  }
 }
 
 .fade-enter-active,

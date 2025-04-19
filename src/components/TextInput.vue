@@ -30,15 +30,17 @@
         @input="handleInput" @focus="handleFocus" @blur="handleBlur" @keydown="handleKeydown" ref="inputRef" />
       <textarea v-else :id="id" :value="modelValue" :placeholder="placeholder" :required="required" :disabled="disabled"
         class="input" @input="handleInput" ref="inputRef"></textarea>
-      <span v-if="required && !showSaved && !showChanged" class="status-indicator required-indicator">required</span>
+      <span v-if="required && !showSaved && !showChanged && !error"
+        class="status-indicator required-indicator">required</span>
       <transition name="fade">
         <span v-if="showSaved && !error" class="status-indicator saved-indicator">saved</span>
       </transition>
       <transition name="fade">
         <span v-if="showChanged && !error" class="status-indicator changed-indicator">changed</span>
       </transition>
-      <div v-if="error" class="error-message">{{ error }}</div>
-      <span v-if="success" class="message success-message">{{ success }}</span>
+      <transition name="fade">
+        <span v-if="error" class="status-indicator error-indicator" :data-error="error">error</span>
+      </transition>
     </div>
   </div>
 </template>
@@ -264,24 +266,42 @@ defineExpose({
   width: 100%;
   min-height: 2rem;
   background: var(--input-bg-color);
-}
 
-.input-wrapper.has-icon {
-  grid-template-columns: auto 1fr;
-}
+  &.has-icon {
+    grid-template-columns: auto 1fr;
+  }
 
-.input-wrapper:focus-within {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px var(--shadow-color);
-}
+  &:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 2px var(--primary-color) inset;
+  }
 
-.input-wrapper.has-error {
-  border-color: var(--danger-color);
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
+  &:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 2px var(--primary-color) inset;
+  }
 
-  .icon {
-    color: var(--danger-color);
+  &.has-error {
+    border-color: var(--danger-color);
+
+    .icon {
+      color: var(--danger-color);
+    }
+
+    &:hover .error-indicator::after {
+      content: attr(data-error);
+      display: block;
+      position: absolute;
+      bottom: 0.25rem;
+      right: 0;
+      padding: 0.25rem 0.75rem;
+      color: white;
+      background-color: var(--danger-color);
+      line-height: var(--line-height);
+      min-width: 200px;
+      border-radius: 0.25rem;
+      z-index: 1;
+    }
   }
 }
 
@@ -292,15 +312,15 @@ defineExpose({
   border-right: 1px solid rgb(from var(--border-color) r g b / 20%);
   cursor: pointer;
   overflow: hidden;
-}
 
-.icon-wrapper:hover {
-  background-color: var(--input-bg-hover);
-}
+  &:hover {
+    background-color: var(--input-bg-hover);
+  }
 
-.icon {
-  color: var(--text-muted);
-  font-size: 1rem;
+  .icon {
+    color: var(--text-muted);
+    font-size: 1rem;
+  }
 }
 
 .input {
@@ -313,52 +333,20 @@ defineExpose({
   background: transparent;
   width: 100%;
   line-height: var(--line-height);
-}
 
-.input::placeholder {
-  color: var(--text-muted);
-}
+  &::placeholder {
+    color: var(--text-muted);
+  }
 
-.input:disabled {
-  background-color: var(--input-bg-disabled);
-  cursor: not-allowed;
-}
-
-.message {
-  position: absolute;
-  bottom: -1.5rem;
-  left: 0;
-  font-size: 0.75rem;
-  white-space: nowrap;
-}
-
-.error-message {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 0.25rem 0.75rem;
-  background-color: var(--danger-color);
-  color: white;
-  font-size: 0.75rem;
-  border-radius: 0 0 0.5rem 0.5rem;
-  transform: translateY(100%);
-  transition: transform 0.2s ease;
-  line-height: var(--line-height);
-  z-index: 1;
-}
-
-.success-message {
-  position: absolute;
-  bottom: -1.5rem;
-  left: 0;
-  color: var(--success-color);
-  font-size: 0.75rem;
-  line-height: var(--line-height);
+  &:disabled {
+    background-color: var(--input-bg-disabled);
+    cursor: not-allowed;
+  }
 }
 
 .status-indicator {
   position: absolute;
+  display: block;
   top: -1px;
   line-height: 1px;
   right: 0.5rem;
@@ -366,14 +354,18 @@ defineExpose({
   color: var(--text-muted);
   background-color: var(--input-bg-color);
   padding: 0 0.25rem;
-}
 
-.saved-indicator {
-  color: var(--success-color);
-}
+  &.saved-indicator {
+    color: var(--success-color);
+  }
 
-.changed-indicator {
-  color: var(--warning-color);
+  &.changed-indicator {
+    color: var(--warning-color);
+  }
+
+  &.error-indicator {
+    color: var(--danger-color);
+  }
 }
 
 .fade-enter-active,
