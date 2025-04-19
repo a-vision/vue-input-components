@@ -1,6 +1,6 @@
 # Vue Input Components
 
-A collection of reusable Vue 3 input components with TypeScript support, designed for modern web applications.
+A collection of reusable Vue 3 input components with consistent styling and behavior.
 
 ## Features
 
@@ -12,142 +12,161 @@ A collection of reusable Vue 3 input components with TypeScript support, designe
 - 🔍 Accessible by default
 - 📱 Responsive and mobile-friendly
 
+## Components
+
+### Text Input
+
+A versatile text input component that supports:
+
+- Icons (Font Awesome or images)
+- Placeholder text
+- Disabled state
+- Custom styling (colors, border radius, padding)
+- Clear button
+- Password toggle
+- Character counter
+- Error messages
+
+### File Upload
+
+A file upload component with:
+
+- Drag and drop support
+- Multiple file selection
+- File type validation
+- File size limits
+- Preview support
+- Custom styling
+- Progress indicator
+
+### Action
+
+A flexible action component that can be used as:
+
+- Button
+- Link
+- Icon button
+- With various styles and states
+
+### Navigation
+
+A navigation component with:
+
+- Multiple styles (tiles, tabs, dropdowns)
+- Icons support
+- Sub-navigation items
+- Custom styling
+- Responsive design
+- Keyboard navigation
+
+### Dropdown
+
+A dropdown component that supports:
+
+- Single and multiple selection
+- Icons (Font Awesome or images)
+- Placeholder text
+- Filtering of options
+- Disabled state
+- Custom styling (colors, border radius, padding)
+- Clear selection button
+- Tags for multiple selection
+- Responsive design
+
 ## Installation
 
 ```bash
-npm install @a-vision-software/vue-input-components
+npm install vue-input-components
 ```
 
 ## Usage
 
-### Import Styles
-
-```typescript
-import '@a-vision-software/vue-input-components/styles.css'
-```
-
-### Import Components
-
-```typescript
-import { TextInput, FileUpload, Action } from '@a-vision-software/vue-input-components'
-```
-
-## Components
-
-### TextInput
-
-A versatile text input component with validation and error handling.
-
 ```vue
 <template>
-  <TextInput
-    v-model="value"
-    label="Username"
-    placeholder="Enter your username"
-    :error="error"
-    :disabled="false"
-  />
-</template>
+  <TextInput v-model="text" placeholder="Enter text" icon="user" :disabled="false" />
 
-<script setup lang="ts">
-import { ref } from 'vue'
-import { TextInput } from '@a-vision-software/vue-input-components'
+  <FileUpload v-model="files" accept="image/*" :max-size="5 * 1024 * 1024" @upload="handleUpload" />
 
-const value = ref('')
-const error = ref('')
-</script>
-```
+  <Action type="button" label="Click me" icon="check" @click="handleClick" />
 
-#### Props
+  <Navigation :items="navigationItems" type="tiles" v-model:active-item="activeItem" />
 
-| Prop          | Type                                                            | Default  | Description                   |
-| ------------- | --------------------------------------------------------------- | -------- | ----------------------------- |
-| `modelValue`  | `string`                                                        | `''`     | The input value               |
-| `label`       | `string`                                                        | `''`     | The input label               |
-| `placeholder` | `string`                                                        | `''`     | The input placeholder         |
-| `error`       | `string`                                                        | `''`     | Error message to display      |
-| `disabled`    | `boolean`                                                       | `false`  | Whether the input is disabled |
-| `required`    | `boolean`                                                       | `false`  | Whether the input is required |
-| `type`        | `'text' \| 'password' \| 'email' \| 'number' \| 'tel' \| 'url'` | `'text'` | The input type                |
-
-### FileUpload
-
-A file upload component with drag-and-drop support and file type validation.
-
-```vue
-<template>
-  <FileUpload
-    v-model="files"
-    accept="image/*"
+  <Dropdown
+    v-model="selected"
+    :options="options"
+    placeholder="Select an option"
+    icon="house"
     :multiple="true"
-    :max-size="5 * 1024 * 1024"
-    @error="handleError"
+    :filterable="true"
   />
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { FileUpload } from '@a-vision-software/vue-input-components'
-
-const files = ref<File[]>([])
-
-const handleError = (error: string) => {
-  console.error(error)
-}
-</script>
 ```
 
-#### Props
+## Props
 
-| Prop         | Type      | Default           | Description                            |
-| ------------ | --------- | ----------------- | -------------------------------------- |
-| `modelValue` | `File[]`  | `[]`              | The selected files                     |
-| `accept`     | `string`  | `'*'`             | Accepted file types                    |
-| `multiple`   | `boolean` | `false`           | Whether multiple files can be selected |
-| `max-size`   | `number`  | `5 * 1024 * 1024` | Maximum file size in bytes             |
-| `disabled`   | `boolean` | `false`           | Whether the upload is disabled         |
+### Text Input
+
+- `modelValue`: string - The input value
+- `placeholder`: string - Placeholder text
+- `icon`: string - Icon name or image URL (prefixed with 'img:')
+- `iconSize`: 'normal' | 'large' - Icon size
+- `disabled`: boolean - Whether the input is disabled
+- `type`: 'text' | 'password' | 'email' | 'number' - Input type
+- `showClear`: boolean - Whether to show the clear button
+- `showCounter`: boolean - Whether to show the character counter
+- `maxLength`: number - Maximum length of the input
+- `error`: string - Error message to display
+- Custom styling props (color, hoverColor, etc.)
+
+### File Upload
+
+- `modelValue`: File[] - The selected files
+- `accept`: string - Accepted file types
+- `maxSize`: number - Maximum file size in bytes
+- `multiple`: boolean - Whether to allow multiple files
+- `disabled`: boolean - Whether the upload is disabled
+- Custom styling props
 
 ### Action
 
-A versatile action component that can be used as a button or link with customizable colors and icons.
+- `type`: 'button' | 'link' - The type of action
+- `label`: string - The action label
+- `icon`: string - Icon name
+- `to`: string - Route for link type
+- `disabled`: boolean - Whether the action is disabled
+- Custom styling props
 
-```vue
-<template>
-  <Action icon="save" label="Save Changes" :color="'#4CAF50'" @click="handleSave" />
-</template>
+### Navigation
 
-<script setup lang="ts">
-import { Action } from '@a-vision-software/vue-input-components'
+- `items`: NavigationItem[] - The navigation items
+- `type`: 'tiles' | 'tabs' | 'dropdowns' - The navigation style
+- `orientation`: 'horizontal' | 'vertical' - The navigation orientation
+- `activeItem`: string - The active item ID
+- `iconSize`: 'normal' | 'large' - Icon size
+- Custom styling props
 
-const handleSave = () => {
-  console.log('Saving changes...')
-}
-</script>
-```
+### Dropdown
 
-#### Props
-
-| Prop       | Type                              | Default     | Description                    |
-| ---------- | --------------------------------- | ----------- | ------------------------------ |
-| `icon`     | `string`                          | `''`        | Font Awesome icon name         |
-| `label`    | `string`                          | `''`        | Action label text              |
-| `color`    | `string`                          | `'#4CAF50'` | Custom color for the action    |
-| `disabled` | `boolean`                         | `false`     | Whether the action is disabled |
-| `href`     | `string`                          | `''`        | URL for link actions           |
-| `type`     | `'button' \| 'submit' \| 'reset'` | `'button'`  | Button type                    |
+- `modelValue`: string | string[] - The selected value(s)
+- `options`: DropdownOption[] - The available options
+- `placeholder`: string - Placeholder text
+- `icon`: string - Icon name or image URL (prefixed with 'img:')
+- `iconSize`: 'normal' | 'large' - Icon size
+- `multiple`: boolean - Whether to allow multiple selection
+- `filterable`: boolean - Whether to allow filtering
+- `disabled`: boolean - Whether the dropdown is disabled
+- Custom styling props
 
 ## Styling
 
-The components use CSS variables for easy customization. You can override these variables in your application:
+All components support custom styling through CSS variables and props:
 
 ```css
 :root {
-  --primary-color: #4caf50;
-  --text-primary: #333;
-  --text-secondary: #666;
-  --border-color: #ddd;
-  --input-bg: #fff;
-  --error-color: #f44336;
+  --primary: #4a90e2;
+  --text-primary: rgba(0, 0, 0, 0.8);
+  --text-secondary: rgba(0, 0, 0, 0.6);
+  --text-disabled: rgba(0, 0, 0, 0.4);
 }
 ```
 
@@ -171,4 +190,4 @@ npm run test
 
 ## License
 
-MIT © [A-Vision Software](https://github.com/a-vision)
+MIT
