@@ -231,7 +231,7 @@ defineExpose({
 }
 
 .text-input.label-left .label {
-  padding-top: 0.75rem;
+  padding-top: 0.25rem;
   width: 100%;
 }
 

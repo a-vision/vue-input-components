@@ -6,8 +6,9 @@
 
     <div class="dropdown-test__section">
       <h2>Single Select Dropdown</h2>
-      <Dropdown v-model="selectedSingle" :options="options" placeholder="Select a color" filterable required
-        @update:modelValue="handleSingleChange" error="This is an error" />
+      <Dropdown v-model="selectedSingle" :options="options" label="Color" labelPosition="left" labelWidth="100px"
+        labelAlign="right" placeholder="Select a color" filterable required @update:modelValue="handleSingleChange"
+        error="This is an error" />
       <div v-if="selectedSingle" class="selection-info">
         Selected: {{ getOptionLabel(selectedSingle) }}
       </div>
@@ -15,8 +16,8 @@
 
     <div class="dropdown-test__section">
       <h2>Multiple Select Dropdown</h2>
-      <Dropdown v-model="selectedMultiple" :options="options" multiple filterable placeholder="Select colors"
-        icon="paintbrush" @update:modelValue="handleMultipleChange" color="#aa0000" />
+      <Dropdown v-model="selectedMultiple" :options="options" label="Multiple colors" multiple filterable
+        placeholder="Select colors" icon="paintbrush" @update:modelValue="handleMultipleChange" color="#aa0000" />
       <div v-if="selectedMultiple.length" class="selection-info">
         Selected: {{ getSelectedLabels(selectedMultiple).join(', ') }}
       </div>

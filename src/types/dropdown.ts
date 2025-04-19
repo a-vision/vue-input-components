@@ -25,4 +25,8 @@ export interface DropdownProps {
   error?: string
   required?: boolean
   autosave?: (value: string | string[]) => Promise<void>
+  label?: string
+  labelPosition?: 'top' | 'left'
+  labelAlign?: 'left' | 'center' | 'right'
+  labelWidth?: string
 }

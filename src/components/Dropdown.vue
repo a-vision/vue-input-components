@@ -5,18 +5,26 @@
     'dropdown--multiple': multiple,
     'dropdown--large-icon': iconSize === 'large',
     'dropdown--has-error': error,
-  }" :style="{
-    '--dropdown-color': error ? 'var(--danger-color)' : color,
-    '--dropdown-hover-color': hoverColor ? hoverColor : 'var(--dropdown-color)',
-    '--dropdown-active-color': activeColor ? activeColor : 'var(--dropdown-color)',
-    '--dropdown-disabled-color': disabledColor,
-    '--dropdown-background-color': backgroundColor,
-    '--dropdown-border-radius': borderRadius,
-    '--dropdown-padding': padding,
-    '--dropdown-max-height': maxHeight,
-    '--dropdown-width': width,
-  }" @click="toggleDropdown" @keydown.esc="closeDropdown" @keydown.space.prevent="toggleDropdown"
+    [`label-${labelPosition}`]: label,
+    [`label-align-${labelAlign}`]: label,
+  }" :style="[
+    { width: width || '100%' },
+    labelStyle,
+    {
+      '--dropdown-color': error ? 'var(--danger-color)' : color,
+      '--dropdown-hover-color': hoverColor ? hoverColor : 'var(--dropdown-color)',
+      '--dropdown-active-color': activeColor ? activeColor : 'var(--dropdown-color)',
+      '--dropdown-disabled-color': disabledColor,
+      '--dropdown-background-color': backgroundColor,
+      '--dropdown-border-radius': borderRadius,
+      '--dropdown-padding': padding,
+      '--dropdown-max-height': maxHeight,
+    }
+  ]" @click="toggleDropdown" @keydown.esc="closeDropdown" @keydown.space.prevent="toggleDropdown"
     @keydown.enter.prevent="toggleDropdown" tabindex="0">
+    <label v-if="label" :for="id" class="label">
+      {{ label }}
+    </label>
     <div class="dropdown__selected">
       <div v-if="icon" class="dropdown__icon">
         <img v-if="icon.startsWith('img:')" :src="icon.substring(4)" :alt="placeholder" class="dropdown__icon-image" />
@@ -74,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onUnmounted } from 'vue'
+import { ref, computed, watch, nextTick, onUnmounted, onMounted } from 'vue'
 import type { DropdownProps, DropdownOption } from '../types/dropdown'
 
 const props = withDefaults(defineProps<DropdownProps>(), {
@@ -95,6 +103,10 @@ const props = withDefaults(defineProps<DropdownProps>(), {
   iconSize: 'normal',
   required: false,
   error: '',
+  label: '',
+  labelPosition: 'top',
+  labelAlign: 'left',
+  labelWidth: '',
 })
 
 const emit = defineEmits<{
@@ -257,6 +269,22 @@ onUnmounted(() => {
     clearTimeout(changedTimer.value)
   }
 })
+
+const id = ref<string>('')
+
+const labelStyle = computed(() => {
+  if (!props.label) return {}
+  if (props.labelPosition === 'left' && props.labelWidth) {
+    return {
+      'grid-template-columns': `${props.labelWidth} 1fr`,
+    }
+  }
+  return {}
+})
+
+onMounted(() => {
+  id.value = `dropdown-${Math.random().toString(36).substr(2, 9)}`
+})
 </script>
 
 <style scoped>
@@ -267,6 +295,9 @@ onUnmounted(() => {
   cursor: pointer;
   user-select: none;
   outline: none;
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
 
   &.dropdown--has-error {
     border-color: var(--danger-color);
@@ -545,5 +576,38 @@ onUnmounted(() => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.dropdown.label-top {
+  grid-template-rows: auto 1fr;
+}
+
+.dropdown.label-left {
+  grid-template-columns: 30% 1fr;
+  align-items: start;
+  gap: 1rem;
+}
+
+.dropdown.label-left .label {
+  padding-top: 0.25rem;
+  width: 100%;
+}
+
+.label {
+  font-weight: 500;
+  color: var(--text-color);
+  text-align: left;
+}
+
+.label-align-left .label {
+  text-align: left;
+}
+
+.label-align-right .label {
+  text-align: right;
+}
+
+.label-align-center .label {
+  text-align: center;
 }
 </style>
