@@ -12,20 +12,19 @@
         <div class="input-group">
           <h2>Account Information</h2>
           <TextInput v-model="username" type="text" icon="user" placeholder="Enter your username" :required="true"
-            :error="usernameError" label="Username" label-position="left" label-align="right" label-width="20%"
-            total-width="100%" />
+            :error="usernameError" label="Username" label-position="left" label-align="right" label-width="20%" />
           <TextInput v-model="password" type="password" icon="lock" placeholder="Enter your password" :required="true"
-            :error="passwordError" label="Password" label-position="left" label-align="right" label-width="20%"
-            total-width="100%" />
+            :error="passwordError" label="Password" label-position="left" label-align="right" label-width="20%" />
         </div>
         <div class="input-group">
           <h2>Additional Information</h2>
-          <TextInput v-model="bio" isTextarea label="Bio" icon="user-circle" placeholder="Tell us about yourself..."
-            :rows="4" :maxLength="500" :error="bioError" :autosave="handleBioAutosave" label-position="top"
-            label-align="left" total-width="100%" height="10rem" max-height="20rem" />
-          <TextInput v-model="feedback" isTextarea label="Feedback" icon="comment" placeholder="Share your thoughts..."
-            :rows="3" :maxLength="1000" :error="feedbackError" :autosave="handleFeedbackAutosave" label-position="left"
-            label-align="left" label-width="auto" total-width="100%" max-height="8rem" />
+          <TextInput v-model="bio" type="textarea" label="Bio" icon="user-circle"
+            placeholder="Tell us about yourself..." :rows="4" :maxLength="500" :error="bioError"
+            :autosave="handleBioAutosave" label-position="top" label-align="left" height="10rem" max-height="20rem" />
+          <TextInput v-model="feedback" type="textarea" label="Feedback" icon="comment"
+            placeholder="Share your thoughts..." :rows="3" :maxLength="1000" :error="feedbackError"
+            :autosave="handleFeedbackAutosave" label-position="left" label-align="left" label-width="auto"
+            max-height="8rem" />
         </div>
       </div>
       <div class="column">
@@ -33,23 +32,22 @@
           <h2>Address Information</h2>
           <TextInput v-model="street" label="Street Address" type="text" icon="road"
             placeholder="Enter your street address" :error="streetError" :autosave="handleStreetAutosave"
-            label-position="top" label-align="left" total-width="100%" />
+            label-position="top" label-align="left" />
           <div class="address-row">
             <TextInput v-model="city" label="City" type="text" icon="building" placeholder="Enter your city"
               :error="cityError" :autosave="handleCityAutosave" label-position="top" label-align="left"
               total-width="calc(100% - 11rem)" />
             <TextInput v-model="postalCode" label="Postal Code" type="text" icon="fas fa-hashtag" placeholder="1234AB"
               :error="postalCodeError" @update:modelValue="handlePostalCodeInput" :autosave="handlePostalCodeAutosave"
-              label-position="top" label-align="left" total-width="10rem" />
+              label-position="top" label-align="left" width="10rem" />
           </div>
           <TextInput v-model="country" label="Country" type="text" icon="flag" placeholder="Enter your country"
-            :error="countryError" :autosave="handleCountryAutosave" label-position="top" label-align="left"
-            total-width="100%" />
+            :error="countryError" :autosave="handleCountryAutosave" label-position="top" label-align="left" />
           <TextInput v-model="birthDate" type="date" label="Date of Birth" icon="calendar" placeholder="DD/MM/YYYY"
             :min="minDate" :max="maxDate" :error="birthDateError" :autosave="handleBirthDateAutosave"
             label-position="top" label-align="left" />
           <TextInput v-model="comment" label="Comment" type="text" placeholder="Your comment" label-position="top"
-            label-align="left" total-width="100%" />
+            label-align="left" />
         </div>
       </div>
     </div>

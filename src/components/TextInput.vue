@@ -1,47 +1,53 @@
 <template>
   <div class="text-input" :class="{
+    'text-input--disabled': disabled,
+    'text-input--has-error': error,
     [`label-${labelPosition}`]: label,
     [`label-align-${labelAlign}`]: label,
+    'text-input--has-icon': icon,
   }" :style="[
-    { width: type === 'date' ? totalWidth || '12rem' : totalWidth || '100%' },
+    { width: (width || '100%') },
     labelStyle,
     {
-      '--max-textarea-height': props.maxHeight || props.height || '14rem',
-      '--textarea-height': props.height || '5.5rem',
-      '--input-bg-color': props.bgColor || 'var(--input-color, #ffffffaa)',
-      '--datepicker-bg-color': props.bgColor || 'var(--background-color, white)',
-    },
+      '--text-input-color': error ? 'var(--danger-color)' : 'var(--text-primary)',
+      '--text-input-hover-color': 'var(--primary-color)',
+      '--text-input-active-color': 'var(--primary-color)',
+      '--text-input-disabled-color': 'var(--text-disabled)',
+      '--text-input-background-color': bgColor || 'var(--input-color, #ffffffaa)',
+      '--text-dp-background-color': bgColor || '#ffffff',
+      '--text-input-border-radius': '0.5rem',
+      '--text-input-padding': '0.5rem',
+      '--max-textarea-height': maxHeight || height || '14rem',
+      '--textarea-height': height || '5.5rem',
+    }
   ]">
     <label v-if="label" :for="id" class="label">
       {{ label }}
     </label>
-    <div class="input-wrapper" :class="{
-      'has-error': error,
-      'has-icon': icon,
-    }">
-      <div v-if="icon" class="icon-wrapper" @click="focusInput">
-        <font-awesome-icon :icon="icon" class="icon" />
+    <div class="text-input__wrapper">
+      <div v-if="icon" class="text-input__icon" @click="focusInput">
+        <font-awesome-icon :icon="icon" />
       </div>
       <Datepicker v-if="type === 'date'" :id="id" v-model="dateValue" :placeholder="placeholder" :disabled="disabled"
         :readonly="readonly" :min-date="min" :max-date="max" :format="dateFormat" :enable-time-picker="false"
         :auto-apply="true" :close-on-auto-apply="true" :clearable="true"
-        :input-class-name="['input', { 'has-icon': icon }]" @update:model-value="handleDateChange" @focus="handleFocus"
-        @blur="handleBlur" />
-      <input v-else-if="!isTextarea" :id="id" :type="type" :value="modelValue" :placeholder="placeholder"
-        :required="required" :disabled="disabled" :readonly="readonly" :maxlength="maxlength" class="input"
+        :input-class-name="['text-input__input', { 'text-input__input--has-icon': icon }]"
+        @update:model-value="handleDateChange" @focus="handleFocus" @blur="handleBlur" />
+      <input v-else-if="type !== 'textarea'" :id="id" :type="type" :value="modelValue" :placeholder="placeholder"
+        :required="required" :disabled="disabled" :readonly="readonly" :maxlength="maxlength" class="text-input__input"
         @input="handleInput" @focus="handleFocus" @blur="handleBlur" @keydown="handleKeydown" ref="inputRef" />
       <textarea v-else :id="id" :value="modelValue" :placeholder="placeholder" :required="required" :disabled="disabled"
-        class="input" @input="handleInput" ref="inputRef"></textarea>
+        class="text-input__input" @input="handleInput" ref="inputRef"></textarea>
       <span v-if="required && !showSaved && !showChanged && !error"
-        class="status-indicator required-indicator">required</span>
+        class="text-input__status required-indicator">required</span>
       <transition name="fade">
-        <span v-if="showSaved && !showChanged && !error" class="status-indicator saved-indicator">saved</span>
+        <span v-if="showSaved && !showChanged && !error" class="text-input__status saved-indicator">saved</span>
       </transition>
       <transition name="fade">
-        <span v-if="showChanged && !error" class="status-indicator changed-indicator">changed</span>
+        <span v-if="showChanged && !error" class="text-input__status changed-indicator">changed</span>
       </transition>
       <transition name="fade">
-        <span v-if="error" class="status-indicator error-indicator" :data-error="error">error</span>
+        <span v-if="error" class="text-input__status error-indicator" :data-error="error">error</span>
       </transition>
     </div>
   </div>
@@ -49,7 +55,7 @@
 
 <script setup lang="ts">
 import { computed, ref, onUnmounted, onMounted } from 'vue'
-import { TextInputProps } from '../types'
+import { TextInputProps } from '../types/textinput'
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
@@ -65,6 +71,13 @@ const props = withDefaults(defineProps<TextInputProps>(), {
   error: '',
   min: undefined,
   max: undefined,
+  labelPosition: 'top',
+  labelAlign: 'left',
+  labelWidth: '',
+  height: '5.5rem',
+  maxHeight: '14rem',
+  bgColor: 'var(--input-color, #ffffffee)',
+  width: (props) => (props.type === 'date') ? '10rem' : '100%',
 })
 
 const emit = defineEmits<{
@@ -130,7 +143,6 @@ const handleAutosave = async (value: string) => {
 }
 
 const debounceAutosave = (value: string) => {
-  // Clear existing timers
   if (debounceTimer.value) {
     clearTimeout(debounceTimer.value)
   }
@@ -138,18 +150,15 @@ const debounceAutosave = (value: string) => {
     clearTimeout(changedTimer.value)
   }
 
-  // Show changed indicator immediately
   if (!props.error) {
     showChanged.value = true
   }
 
-  // Trigger changed event after 500ms
   changedTimer.value = window.setTimeout(() => {
     emit('changed')
     isChanged.value = true
   }, 500)
 
-  // Trigger autosave after 1500ms
   debounceTimer.value = window.setTimeout(() => {
     handleAutosave(value)
   }, 1500)
@@ -160,15 +169,17 @@ const focusInput = () => {
 }
 
 const adjustHeight = (element: HTMLTextAreaElement) => {
-  element.style.height = 'auto' // Reset height to auto to calculate new height
-  element.style.height = `${element.scrollHeight}px` // Set height to scrollHeight
+  element.style.height = 'auto'
+  element.style.height = `${element.scrollHeight}px`
 }
 
 const handleInput = (event: Event) => {
   const value = (event.target as HTMLTextAreaElement).value
   emit('update:modelValue', value)
   debounceAutosave(value)
-  adjustHeight(event.target as HTMLTextAreaElement) // Adjust height on input
+  if (props.type === 'text' && (event.target as HTMLTextAreaElement).tagName === 'TEXTAREA') {
+    adjustHeight(event.target as HTMLTextAreaElement)
+  }
 }
 
 const handleFocus = () => {
@@ -189,7 +200,6 @@ const handleDateChange = (date: Date | null) => {
   debounceAutosave(formattedDate)
 }
 
-// Cleanup timers on unmount
 onUnmounted(() => {
   if (debounceTimer.value) {
     clearTimeout(debounceTimer.value)
@@ -218,6 +228,40 @@ defineExpose({
   gap: 0.5rem;
   width: 100%;
   margin-top: 0.7rem;
+
+  &:not(.text-input--has-icon) {
+    .text-input__wrapper {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &.text-input--has-error {
+    border-color: var(--danger-color);
+
+    .text-input__icon {
+      color: var(--danger-color);
+    }
+
+    &:hover .error-indicator::after {
+      content: attr(data-error);
+      display: block;
+      position: absolute;
+      bottom: 0.25rem;
+      right: 0;
+      padding: 0.25rem 0.75rem;
+      color: white;
+      background-color: var(--danger-color);
+      line-height: var(--line-height);
+      min-width: 200px;
+      border-radius: 0.25rem;
+      z-index: 1;
+    }
+
+    input,
+    textarea {
+      color: var(--danger-color);
+    }
+  }
 }
 
 .text-input.label-top {
@@ -253,65 +297,40 @@ defineExpose({
   text-align: center;
 }
 
-.required {
-  color: var(--danger-color);
-  margin-left: 0.25rem;
-}
-
-.input-wrapper {
+.text-input__wrapper {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr;
-  border: 1px solid var(--border-color);
-  border-radius: 0.5rem;
+  grid-template-columns: 2em auto;
+  border: 1px solid var(--text-input-color);
+  border-radius: var(--text-input-border-radius);
   transition: all 0.2s ease;
   width: 100%;
   min-height: 2rem;
-  background: var(--input-bg-color);
-
-  &.has-icon {
-    grid-template-columns: auto 1fr;
-  }
+  background: var(--text-input-background-color);
 
   &:hover {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 2px var(--primary-color) inset;
+    border-color: var(--text-input-hover-color);
+    box-shadow: 0 0 2px var(--text-input-hover-color) inset;
   }
 
   &:focus-within {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 2px var(--primary-color) inset;
-  }
-
-  &.has-error {
-    border-color: var(--danger-color);
-
-    .icon {
-      color: var(--danger-color);
-    }
-
-    &:hover .error-indicator::after {
-      content: attr(data-error);
-      display: block;
-      position: absolute;
-      bottom: 0.25rem;
-      right: 0;
-      padding: 0.25rem 0.75rem;
-      color: white;
-      background-color: var(--danger-color);
-      line-height: var(--line-height);
-      min-width: 200px;
-      border-radius: 0.25rem;
-      z-index: 1;
-    }
+    border-color: var(--text-input-active-color);
+    box-shadow: 0 0 2px var(--text-input-active-color) inset;
   }
 }
 
-.icon-wrapper {
+.text-input {}
+
+.text-input--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.text-input__icon {
   display: grid;
   place-items: start;
   padding: 0.5rem;
-  border-right: 1px solid rgb(from var(--border-color) r g b / 20%);
+  border-right: 1px solid rgb(from var(--text-input-color) r g b / 20%);
   cursor: pointer;
   overflow: hidden;
 
@@ -325,10 +344,10 @@ defineExpose({
   }
 }
 
-.input {
+.text-input__input {
   padding: 0.25rem 0.5rem;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: var(--text-input-border-radius);
   outline: none;
   font-size: 1rem;
   color: var(--text-color);
@@ -346,7 +365,7 @@ defineExpose({
   }
 }
 
-.status-indicator {
+.text-input__status {
   position: absolute;
   display: block;
   top: -1px;
@@ -354,7 +373,7 @@ defineExpose({
   right: 0.5rem;
   font-size: 0.75rem;
   color: var(--text-muted);
-  background-color: var(--input-bg-color);
+  background-color: var(--text-input-background-color);
   padding: 0 0.25rem;
 
   &.saved-indicator {
@@ -381,8 +400,8 @@ defineExpose({
 }
 
 textarea {
-  min-height: var(--textarea-height, 5.5rem);
-  max-height: var(--max-textarea-height, 14rem);
+  min-height: var(--textarea-height);
+  max-height: var(--max-textarea-height);
   overflow-y: auto;
   resize: none;
 }
@@ -407,7 +426,7 @@ textarea {
   cursor: not-allowed;
 }
 
-:deep(.dp__input.has-icon) {
+:deep(.dp__input.text-input__input--has-icon) {
   padding-left: 2.5rem;
 }
 
@@ -420,9 +439,9 @@ textarea {
 }
 
 :deep(.dp__menu) {
-  background-color: var(--datepicker-bg-color);
-  border: 1px solid var(--border-color);
-  border-radius: 0.5rem;
+  background-color: var(--text-dp-background-color);
+  border: 1px solid var(--text-input-color);
+  border-radius: var(--text-input-border-radius);
   box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -433,17 +452,17 @@ textarea {
 }
 
 :deep(.dp__today) {
-  border-color: var(--primary-color);
+  border-color: var(--text-input-active-color);
 }
 
 :deep(.dp__active_date) {
-  background-color: var(--primary-color);
+  background-color: var(--text-input-active-color);
   color: white;
 }
 
 :deep(.dp__range_start),
 :deep(.dp__range_end) {
-  background-color: var(--primary-color);
+  background-color: var(--text-input-active-color);
   color: white;
 }
 
@@ -452,10 +471,7 @@ textarea {
   color: var(--text-color);
 }
 
-:deep(.dp__arrow_bottom) {
-  background-color: inherit;
-}
-
+:deep(.dp__arrow_bottom),
 :deep(.dp__arrow_top) {
   background-color: inherit;
 }

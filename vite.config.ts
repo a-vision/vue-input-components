@@ -8,18 +8,9 @@ export default defineConfig({
   plugins: [
     vue(),
     dts({
-      include: ['src'],
+      include: ['src/**/*.ts', 'src/**/*.vue'],
       exclude: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
-      insertTypesEntry: true,
-      copyDtsFiles: true,
-      rollupTypes: true,
-      outDir: 'dist',
-      beforeWriteFile: (filePath, content) => {
-        return {
-          filePath,
-          content: content.replace(/\.vue/g, ''),
-        }
-      },
+      tsconfigPath: './tsconfig.json',
     }),
   ],
   build: {
