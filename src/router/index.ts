@@ -4,6 +4,7 @@ import FileUploadTestView from '../views/FileUploadTestView.vue'
 import ActionTestView from '../views/ActionTestView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import NavigationTestView from '../views/NavigationTestView.vue'
+import DropdownTestView from '../views/DropdownTestView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,6 +38,12 @@ const router = createRouter({
       name: 'navigation',
       component: NavigationTestView,
       meta: { title: 'Navigation Test' },
+    },
+    {
+      path: '/dropdown',
+      name: 'dropdown',
+      component: DropdownTestView,
+      meta: { title: 'Dropdown Test' },
     },
   ],
 })

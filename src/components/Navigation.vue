@@ -5,23 +5,23 @@
     `navigation--${orientation}`,
     { 'navigation--large-icons': iconSize === 'large' },
   ]" :style="{
-    '--navigation-color': color,
-    '--navigation-hover-color': hoverColor,
-    '--navigation-active-color': activeColor,
-    '--navigation-disabled-color': disabledColor,
-    '--navigation-gap': gap,
-    '--navigation-padding': padding,
-    '--navigation-border-radius': borderRadius,
-    '--navigation-height': height,
-    '--navigation-width': width,
-    '--navigation-background-color': backgroundColor,
-    '--navigation-active-background-color': activeBackgroundColor || 'rgba(0, 0, 0, 0.1)',
-    '--navigation-bottom-border': showBottomBorder
-      ? `1px solid ${bottomBorderColor || 'rgba(0, 0, 0, 0.2)'}`
-      : 'none',
-    '--navigation-tiles-grid': navigationGrid,
-    'max-height': height,
-  }">
+      '--navigation-color': color,
+      '--navigation-hover-color': hoverColor,
+      '--navigation-active-color': activeColor,
+      '--navigation-disabled-color': disabledColor,
+      '--navigation-gap': gap,
+      '--navigation-padding': padding,
+      '--navigation-border-radius': borderRadius,
+      '--navigation-height': height,
+      '--navigation-width': width,
+      '--navigation-background-color': backgroundColor,
+      '--navigation-active-background-color': activeBackgroundColor || 'rgba(0, 0, 0, 0.1)',
+      '--navigation-bottom-border': showBottomBorder
+        ? `1px solid ${bottomBorderColor || 'rgba(0, 0, 0, 0.2)'}`
+        : 'none',
+      '--navigation-tiles-grid': navigationGrid,
+      'max-height': height,
+    }">
     <template v-if="type === 'tiles'">
       <div class="navigation__tiles">
         <div v-for="(item, index) in sortedItems" :key="item.id" class="navigation__tile" :class="[
@@ -31,12 +31,12 @@
           { 'navigation__tile--open': isDropdownOpen(item.id) },
           { 'navigation__tile--spacer': item.id.includes('spacer') },
         ]" :style="{
-          '--item-alignment': item.alignment || activeItemAlignment,
-          width: item.width || '150px',
-          'min-width': item.width || '150px',
-          'max-width': item.width || '150px',
-          'grid-column': item.alignment === 'right' ? `${index - items.length}` : `auto`,
-        }" @click="(e) => !item.id.includes('spacer') && handleItemClick(item, e)">
+                  '--item-alignment': item.alignment || activeItemAlignment,
+                  width: item.width || '150px',
+                  'min-width': item.width || '150px',
+                  'max-width': item.width || '150px',
+                  'grid-column': item.alignment === 'right' ? `${index - items.length}` : `auto`,
+                }" @click="(e) => !item.id.includes('spacer') && handleItemClick(item, e)">
           <div class="navigation__tile-content" :class="{
             'navigation__tile-content--icon-only': !item.label,
             'navigation__tile-content--large-icon': iconSize === 'large' && item.icon,
@@ -93,8 +93,8 @@
           { 'navigation__dropdown--end': item.alignment === 'end' },
           { 'navigation__dropdown--open': isDropdownOpen(item.id) },
         ]" :style="{
-          '--item-alignment': item.alignment || activeItemAlignment,
-        }">
+                  '--item-alignment': item.alignment || activeItemAlignment,
+                }">
           <div class="navigation__dropdown-header" :class="{
             'navigation__dropdown-header--icon-only': !item.label,
             'navigation__dropdown-header--large-icon': iconSize === 'large' && item.icon,
@@ -146,8 +146,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { NavigationProps, NavigationItem } from '../types/navigation'
+import type { NavigationProps, NavigationItem } from '../types/navigation'
 
 const props = defineProps<NavigationProps>()
 const emit = defineEmits<{

@@ -10,7 +10,7 @@ import router from './router'
 import './assets/colors.css'
 import './assets/main.css'
 
-// Add all solid icons to the library
+// Add all solid and regular icons to the library
 library.add(fas, far)
 
 const app = createApp(App)

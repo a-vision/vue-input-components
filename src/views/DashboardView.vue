@@ -30,6 +30,13 @@
           <p>Test the navigation component</p>
         </div>
       </router-link>
+      <router-link to="/dropdown" class="tile">
+        <div class="tile-content">
+          <font-awesome-icon icon="chevron-down" class="tile-icon" />
+          <h2>Dropdown</h2>
+          <p>Test the dropdown component with single/multiple selection and filtering</p>
+        </div>
+      </router-link>
     </div>
   </div>
 </template>
