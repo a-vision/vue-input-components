@@ -367,7 +367,6 @@ onUnmounted(() => {
   color: white;
   border-radius: calc(var(--dropdown-border-radius) * 0.75);
   font-size: 0.875rem;
-  color: var(--dropdown-color);
 }
 
 .dropdown__selected-tag-remove {
