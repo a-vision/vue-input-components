@@ -285,7 +285,7 @@ defineExpose({
   display: grid;
   place-items: start;
   padding: 1rem;
-  border-right: 1px solid var(--border-color);
+  border-right: 1px solid rgb(from var(--border-color) r g b / 20%);
   cursor: pointer;
   overflow: hidden;
 }

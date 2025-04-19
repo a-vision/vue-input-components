@@ -225,7 +225,7 @@ watch(isOpen, (newValue) => {
   font-size: 1.2em;
   color: var(--dropdown-color);
   padding: 0 0.75rem;
-  border-right: 1px solid rgba(0, 0, 0, 0.2);
+  border-right: 1px solid rgb(from var(--dropdown-color) r g b / 20%);
   grid-column: 1;
   height: 100%;
   align-self: stretch;
