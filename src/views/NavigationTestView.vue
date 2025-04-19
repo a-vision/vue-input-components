@@ -6,17 +6,9 @@
 
     <div class="navigation-test__section">
       <h2>Tiles Navigation (Default)</h2>
-      <Navigation
-        :items="defaultItems"
-        type="tiles"
-        orientation="horizontal"
-        v-model:activeItem="activeDefaultItem"
-        @item-click="handleDefaultClick"
-        iconSize="large"
-        height="90px"
-        backgroundColor="#fff"
-        activeBackgroundColor="var(--background-color)"
-      />
+      <Navigation :items="defaultItems" type="tiles" orientation="horizontal" v-model:activeItem="activeDefaultItem"
+        @item-click="handleDefaultClick" iconSize="large" height="90px" backgroundColor="#fff"
+        activeBackgroundColor="var(--background-color)" />
       <div v-if="lastClicked.default" class="click-info">
         Last clicked: {{ lastClicked.default.url || `id:${lastClicked.default.id}` }}
       </div>
@@ -24,15 +16,8 @@
 
     <div class="navigation-test__section">
       <h2>Tabs Navigation (Mixed Alignment)</h2>
-      <Navigation
-        :items="mixedAlignmentItems"
-        type="tiles"
-        orientation="horizontal"
-        v-model:activeItem="activeTabsItem"
-        @item-click="handleTabsClick"
-        height="2em"
-        showBottomBorder
-      />
+      <Navigation :items="mixedAlignmentItems" type="tiles" orientation="horizontal" v-model:activeItem="activeTabsItem"
+        @item-click="handleTabsClick" height="2em" showBottomBorder />
       <div v-if="lastClicked.tabs" class="click-info">
         Last clicked: {{ lastClicked.tabs.label }}
         <span v-if="lastClicked.tabs.alignment">({{ lastClicked.tabs.alignment }} aligned)</span>
@@ -41,46 +26,20 @@
 
     <div class="navigation-test__section">
       <h2>Dropdown Navigation (Vertical)</h2>
-      <Navigation
-        :items="dropdownItems"
-        type="dropdowns"
-        orientation="vertical"
-        v-model:activeItem="activeDropdownItem"
-        @item-click="handleDropdownClick"
-        :showIcons="false"
-        color="#805ad5"
-        hoverColor="#6b46c1"
-        activeColor="#553c9a"
-        disabledColor="#b794f4"
-        gap="0.5rem"
-        padding="0.75rem 1rem"
-        borderRadius="6px"
-      />
+      <Navigation :items="dropdownItems" type="dropdowns" orientation="vertical" v-model:activeItem="activeDropdownItem"
+        @item-click="handleDropdownClick" :showIcons="false" color="#805ad5" hoverColor="#6b46c1" activeColor="#553c9a"
+        disabledColor="#b794f4" gap="0.5rem" padding="0.75rem 1rem" borderRadius="6px" />
       <div v-if="lastClicked.dropdown" class="click-info">
         Last clicked: {{ lastClicked.dropdown.label }}
-        <span v-if="lastClicked.dropdown.children"
-          >(has {{ lastClicked.dropdown.children.length }} children)</span
-        >
+        <span v-if="lastClicked.dropdown.children">(has {{ lastClicked.dropdown.children.length }} children)</span>
       </div>
     </div>
 
     <div class="navigation-test__section">
       <h2>Custom Styled Navigation</h2>
-      <Navigation
-        :items="customItems"
-        type="tiles"
-        orientation="horizontal"
-        v-model:activeItem="activeCustomItem"
-        @item-click="handleCustomClick"
-        :showIcons="false"
-        color="#4a90e2"
-        hoverColor="#357abd"
-        activeColor="#2c5a8c"
-        disabledColor="#a0c4e8"
-        gap="1.5rem"
-        padding="1rem 2rem"
-        borderRadius="8px"
-      />
+      <Navigation :items="customItems" type="tiles" orientation="horizontal" v-model:activeItem="activeCustomItem"
+        @item-click="handleCustomClick" :showIcons="false" color="#4a90e2" hoverColor="#357abd" activeColor="#2c5a8c"
+        disabledColor="#a0c4e8" gap="1.5rem" padding="1rem 2rem" borderRadius="8px" />
       <div v-if="lastClicked.custom" class="click-info">
         Last clicked: {{ lastClicked.custom.label }}
         <span v-if="lastClicked.custom.disabled">(disabled)</span>
@@ -129,7 +88,7 @@ const defaultItems: NavigationItem[] = [
   },
   {
     id: 'about',
-    label: 'About',
+    label: 'About ahole lot of things',
     url: 'https://example.com',
     icon: 'info',
     alignment: 'right',

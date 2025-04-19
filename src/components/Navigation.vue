@@ -1,123 +1,81 @@
 <template>
-  <nav
-    :class="[
-      'navigation',
-      `navigation--${type}`,
-      `navigation--${orientation}`,
-      { 'navigation--large-icons': iconSize === 'large' },
-    ]"
-    :style="{
-      '--navigation-color': color,
-      '--navigation-hover-color': hoverColor,
-      '--navigation-active-color': activeColor,
-      '--navigation-disabled-color': disabledColor,
-      '--navigation-gap': gap,
-      '--navigation-padding': padding,
-      '--navigation-border-radius': borderRadius,
-      '--navigation-height': height,
-      '--navigation-width': width,
-      '--navigation-background-color': backgroundColor,
-      '--navigation-active-background-color': activeBackgroundColor || 'rgba(0, 0, 0, 0.1)',
-      '--navigation-bottom-border': showBottomBorder
-        ? `1px solid ${bottomBorderColor || 'rgba(0, 0, 0, 0.2)'}`
-        : 'none',
-      '--navigation-tiles-grid': navigationGrid,
-      'max-height': height,
-    }"
-  >
+  <nav :class="[
+    'navigation',
+    `navigation--${type}`,
+    `navigation--${orientation}`,
+    { 'navigation--large-icons': iconSize === 'large' },
+  ]" :style="{
+    '--navigation-color': color,
+    '--navigation-hover-color': hoverColor,
+    '--navigation-active-color': activeColor,
+    '--navigation-disabled-color': disabledColor,
+    '--navigation-gap': gap,
+    '--navigation-padding': padding,
+    '--navigation-border-radius': borderRadius,
+    '--navigation-height': height,
+    '--navigation-width': width,
+    '--navigation-background-color': backgroundColor,
+    '--navigation-active-background-color': activeBackgroundColor || 'rgba(0, 0, 0, 0.1)',
+    '--navigation-bottom-border': showBottomBorder
+      ? `1px solid ${bottomBorderColor || 'rgba(0, 0, 0, 0.2)'}`
+      : 'none',
+    '--navigation-tiles-grid': navigationGrid,
+    'max-height': height,
+  }">
     <template v-if="type === 'tiles'">
       <div class="navigation__tiles">
-        <div
-          v-for="(item, index) in sortedItems"
-          :key="item.id"
-          class="navigation__tile"
-          :class="[
-            { 'navigation__tile--active': item.id === activeItem },
-            { 'navigation__tile--disabled': item.disabled },
-            { 'navigation__tile--right': item.alignment === 'right' },
-            { 'navigation__tile--open': isDropdownOpen(item.id) },
-            { 'navigation__tile--spacer': item.id.includes('spacer') },
-          ]"
-          :style="{
-            '--item-alignment': item.alignment || activeItemAlignment,
-            width: item.width || '150px',
-            'min-width': item.width || '150px',
-            'max-width': item.width || '150px',
-            'grid-column': item.alignment === 'right' ? `${index - items.length}` : `auto`,
-          }"
-          @click="(e) => !item.id.includes('spacer') && handleItemClick(item, e)"
-        >
-          <div
-            class="navigation__tile-content"
-            :class="{
-              'navigation__tile-content--icon-only': !item.label,
-              'navigation__tile-content--large-icon': iconSize === 'large' && item.icon,
-            }"
-          >
+        <div v-for="(item, index) in sortedItems" :key="item.id" class="navigation__tile" :class="[
+          { 'navigation__tile--active': item.id === activeItem },
+          { 'navigation__tile--disabled': item.disabled },
+          { 'navigation__tile--right': item.alignment === 'right' },
+          { 'navigation__tile--open': isDropdownOpen(item.id) },
+          { 'navigation__tile--spacer': item.id.includes('spacer') },
+        ]" :style="{
+          '--item-alignment': item.alignment || activeItemAlignment,
+          width: item.width || '150px',
+          'min-width': item.width || '150px',
+          'max-width': item.width || '150px',
+          'grid-column': item.alignment === 'right' ? `${index - items.length}` : `auto`,
+        }" @click="(e) => !item.id.includes('spacer') && handleItemClick(item, e)">
+          <div class="navigation__tile-content" :class="{
+            'navigation__tile-content--icon-only': !item.label,
+            'navigation__tile-content--large-icon': iconSize === 'large' && item.icon,
+          }">
             <div v-if="item.icon" class="navigation__icon">
-              <img
-                v-if="item.icon.startsWith('img:')"
-                :src="item.icon.substring(4)"
-                :alt="item.label || 'Icon'"
-                class="navigation__icon-image"
-              />
+              <img v-if="item.icon.startsWith('img:')" :src="item.icon.substring(4)" :alt="item.label || 'Icon'"
+                class="navigation__icon-image" />
               <font-awesome-icon v-else :icon="item.icon" />
             </div>
-            <div
-              v-if="item.label"
-              class="navigation__label"
-              :class="{
-                'navigation__label--small': item.labelSize === 'small',
-                'navigation__label--large': item.labelSize === 'large',
-              }"
-            >
+            <div v-if="item.label" class="navigation__label" :class="{
+              'navigation__label--small': item.labelSize === 'small',
+              'navigation__label--large': item.labelSize === 'large',
+            }">
               <span>{{ item.label }}</span>
               <div v-if="item.children" class="navigation__dropdown-arrow">
                 <font-awesome-icon icon="chevron-down" />
               </div>
             </div>
           </div>
-          <div
-            v-if="item.url && parseInt(height || '0') >= 80 && !item.hideExternalOpen"
-            class="navigation__external-link"
-            @click.stop="openUrl(item.url)"
-          >
+          <div v-if="item.url && parseInt(height || '0') >= 80 && !item.hideExternalOpen"
+            class="navigation__external-link" @click.stop="openUrl(item.url)">
             <font-awesome-icon icon="square-up-right" />
           </div>
-          <div
-            v-if="item.children && isDropdownOpen(item.id)"
-            class="navigation__dropdown-content"
-            :class="{
-              'navigation__dropdown-content--start': item.alignment === 'start',
-              'navigation__dropdown-content--end': item.alignment === 'end',
-            }"
-          >
-            <div
-              v-for="child in item.children"
-              :key="child.id"
-              class="navigation__dropdown-item"
-              :class="{
-                'navigation__dropdown-item--disabled': child.disabled,
-              }"
-              @click="(e) => handleItemClick(child, e)"
-            >
+          <div v-if="item.children && isDropdownOpen(item.id)" class="navigation__dropdown-content" :class="{
+            'navigation__dropdown-content--start': item.alignment === 'start',
+            'navigation__dropdown-content--end': item.alignment === 'end',
+          }">
+            <div v-for="child in item.children" :key="child.id" class="navigation__dropdown-item" :class="{
+              'navigation__dropdown-item--disabled': child.disabled,
+            }" @click="(e) => handleItemClick(child, e)">
               <div v-if="child.icon" class="navigation__icon">
-                <img
-                  v-if="child.icon.startsWith('img:')"
-                  :src="child.icon.substring(4)"
-                  :alt="child.label || 'Icon'"
-                  class="navigation__icon-image"
-                />
+                <img v-if="child.icon.startsWith('img:')" :src="child.icon.substring(4)" :alt="child.label || 'Icon'"
+                  class="navigation__icon-image" />
                 <font-awesome-icon v-else :icon="child.icon" />
               </div>
-              <div
-                v-if="child.label"
-                class="navigation__label"
-                :class="{
-                  'navigation__label--small': child.labelSize === 'small',
-                  'navigation__label--large': child.labelSize === 'large',
-                }"
-              >
+              <div v-if="child.label" class="navigation__label" :class="{
+                'navigation__label--small': child.labelSize === 'small',
+                'navigation__label--large': child.labelSize === 'large',
+              }">
                 {{ child.label }}
               </div>
             </div>
@@ -128,93 +86,54 @@
 
     <template v-else>
       <div class="navigation__dropdowns">
-        <div
-          v-for="item in items"
-          :key="item.id"
-          class="navigation__dropdown"
-          :class="[
-            { 'navigation__dropdown--active': item.id === activeItem },
-            { 'navigation__dropdown--disabled': item.disabled },
-            { 'navigation__dropdown--start': item.alignment === 'start' },
-            { 'navigation__dropdown--end': item.alignment === 'end' },
-            { 'navigation__dropdown--open': isDropdownOpen(item.id) },
-          ]"
-          :style="{
-            '--item-alignment': item.alignment || activeItemAlignment,
-          }"
-        >
-          <div
-            class="navigation__dropdown-header"
-            :class="{
-              'navigation__dropdown-header--icon-only': !item.label,
-              'navigation__dropdown-header--large-icon': iconSize === 'large' && item.icon,
-            }"
-            @click="(e) => handleItemClick(item, e)"
-          >
+        <div v-for="item in items" :key="item.id" class="navigation__dropdown" :class="[
+          { 'navigation__dropdown--active': item.id === activeItem },
+          { 'navigation__dropdown--disabled': item.disabled },
+          { 'navigation__dropdown--start': item.alignment === 'start' },
+          { 'navigation__dropdown--end': item.alignment === 'end' },
+          { 'navigation__dropdown--open': isDropdownOpen(item.id) },
+        ]" :style="{
+          '--item-alignment': item.alignment || activeItemAlignment,
+        }">
+          <div class="navigation__dropdown-header" :class="{
+            'navigation__dropdown-header--icon-only': !item.label,
+            'navigation__dropdown-header--large-icon': iconSize === 'large' && item.icon,
+          }" @click="(e) => handleItemClick(item, e)">
             <div v-if="item.icon" class="navigation__icon">
-              <img
-                v-if="item.icon.startsWith('img:')"
-                :src="item.icon.substring(4)"
-                :alt="item.label || 'Icon'"
-                class="navigation__icon-image"
-              />
+              <img v-if="item.icon.startsWith('img:')" :src="item.icon.substring(4)" :alt="item.label || 'Icon'"
+                class="navigation__icon-image" />
               <font-awesome-icon v-else :icon="item.icon" />
             </div>
-            <div
-              v-if="item.label"
-              class="navigation__label"
-              :class="{
-                'navigation__label--small': item.labelSize === 'small',
-                'navigation__label--large': item.labelSize === 'large',
-              }"
-            >
+            <div v-if="item.label" class="navigation__label" :class="{
+              'navigation__label--small': item.labelSize === 'small',
+              'navigation__label--large': item.labelSize === 'large',
+            }">
               <span>{{ item.label }}</span>
               <div v-if="item.children" class="navigation__dropdown-arrow">
                 <font-awesome-icon icon="chevron-down" />
               </div>
             </div>
           </div>
-          <div
-            v-if="item.url && parseInt(height || '0') >= 80 && !item.hideExternalOpen"
-            class="navigation__external-link"
-            @click.stop="openUrl(item.url)"
-          >
+          <div v-if="item.url && parseInt(height || '0') >= 80 && !item.hideExternalOpen"
+            class="navigation__external-link" @click.stop="openUrl(item.url)">
             <font-awesome-icon icon="square-up-right" />
           </div>
-          <div
-            v-if="item.children && isDropdownOpen(item.id)"
-            class="navigation__dropdown-content"
-            :class="{
-              'navigation__dropdown-content--start': item.alignment === 'start',
-              'navigation__dropdown-content--end': item.alignment === 'end',
-            }"
-          >
-            <div
-              v-for="child in item.children"
-              :key="child.id"
-              class="navigation__dropdown-item"
-              :class="{
-                'navigation__dropdown-item--disabled': child.disabled,
-              }"
-              @click="(e) => handleItemClick(child, e)"
-            >
+          <div v-if="item.children && isDropdownOpen(item.id)" class="navigation__dropdown-content" :class="{
+            'navigation__dropdown-content--start': item.alignment === 'start',
+            'navigation__dropdown-content--end': item.alignment === 'end',
+          }">
+            <div v-for="child in item.children" :key="child.id" class="navigation__dropdown-item" :class="{
+              'navigation__dropdown-item--disabled': child.disabled,
+            }" @click="(e) => handleItemClick(child, e)">
               <div v-if="child.icon" class="navigation__icon">
-                <img
-                  v-if="child.icon.startsWith('img:')"
-                  :src="child.icon.substring(4)"
-                  :alt="child.label || 'Icon'"
-                  class="navigation__icon-image"
-                />
+                <img v-if="child.icon.startsWith('img:')" :src="child.icon.substring(4)" :alt="child.label || 'Icon'"
+                  class="navigation__icon-image" />
                 <font-awesome-icon v-else :icon="child.icon" />
               </div>
-              <div
-                v-if="child.label"
-                class="navigation__label"
-                :class="{
-                  'navigation__label--small': child.labelSize === 'small',
-                  'navigation__label--large': child.labelSize === 'large',
-                }"
-              >
+              <div v-if="child.label" class="navigation__label" :class="{
+                'navigation__label--small': child.labelSize === 'small',
+                'navigation__label--large': child.labelSize === 'large',
+              }">
                 {{ child.label }}
               </div>
             </div>
@@ -334,11 +253,13 @@ onUnmounted(() => {
   transition: all 0.2s ease;
   background: transparent;
   height: 100%;
+  overflow: hidden;
 }
 
 .navigation__tile:hover {
   border-color: var(--navigation-hover-color);
   color: var(--navigation-hover-color);
+  overflow: visible;
 
   .navigation__tile-content {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -347,6 +268,7 @@ onUnmounted(() => {
 }
 
 .navigation__tile--active {
+  overflow: visible;
   border-color: var(--navigation-active-color);
   color: var(--navigation-active-color);
   background-color: var(--navigation-active-background-color);
@@ -584,10 +506,24 @@ onUnmounted(() => {
 .navigation__label {
   white-space: nowrap;
   text-align: center;
-  display: flex;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  max-width: 100%;
+
+  .navigation__dropdown-arrow {
+    display: inline-block;
+  }
+}
+
+.navigation__tile:hover .navigation__label,
+.navigation__tile--active .navigation__label {
+  text-overflow: unset;
+  overflow: visible;
+  max-width: unset;
 }
 
 .navigation__label--small {
