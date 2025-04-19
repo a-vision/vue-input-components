@@ -1,7 +1,7 @@
 :root {
   /* Base colors */
   --primary-color: #3498db;
-  --primary-color-light: rgba(52, 152, 219, 0.2);
+  --primary-color-light: rgb(from var(--primary-color) r g b / 80%);
   --secondary-color: #2ecc71;
 
   /* Text colors */
@@ -9,8 +9,8 @@
   --text-color-light: #7f8c8d;
 
   /* UI colors */
-  --border-color: #dcdfe6;
-  --icon-color: #95a5a6;
+  --border-color: #555555;
+  --icon-color: rgb(from var(--border-color) r g b / 80%);
 
   /* State colors */
   --error-color: #e74c3c;
@@ -32,8 +32,8 @@
   --input-bg-disabled: rgba(0, 0, 0, 0.05);
 
   /* Text Colors */
-  --text-muted: #6c757d;
   --text-primary: #2c3e50;
+  --text-muted: rgb(from var(--text-primary) r g b / 80%);
 
   /* Border Colors */
   --input-bg: #ffffff;

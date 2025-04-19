@@ -359,7 +359,7 @@ defineExpose({
 
 .status-indicator {
   position: absolute;
-  top: 0px;
+  top: -1px;
   line-height: 1px;
   right: 0.5rem;
   font-size: 0.75rem;
