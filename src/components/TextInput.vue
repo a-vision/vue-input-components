@@ -8,6 +8,8 @@
     {
       '--max-textarea-height': props.maxHeight || props.height || '14rem',
       '--textarea-height': props.height || '5.5rem',
+      '--input-bg-color': props.bgColor || 'var(--input-color, #ffffffaa)',
+      '--datepicker-bg-color': props.bgColor || 'var(--background-color, white)',
     },
   ]">
     <label v-if="label" :for="id" class="label">
@@ -33,7 +35,7 @@
       <span v-if="required && !showSaved && !showChanged && !error"
         class="status-indicator required-indicator">required</span>
       <transition name="fade">
-        <span v-if="showSaved && !error" class="status-indicator saved-indicator">saved</span>
+        <span v-if="showSaved && !showChanged && !error" class="status-indicator saved-indicator">saved</span>
       </transition>
       <transition name="fade">
         <span v-if="showChanged && !error" class="status-indicator changed-indicator">changed</span>
@@ -418,7 +420,7 @@ textarea {
 }
 
 :deep(.dp__menu) {
-  background-color: var(--input-bg-color);
+  background-color: var(--datepicker-bg-color);
   border: 1px solid var(--border-color);
   border-radius: 0.5rem;
   box-shadow:
@@ -448,5 +450,13 @@ textarea {
 :deep(.dp__range_between) {
   background-color: var(--primary-color-light);
   color: var(--text-color);
+}
+
+:deep(.dp__arrow_bottom) {
+  background-color: inherit;
+}
+
+:deep(.dp__arrow_top) {
+  background-color: inherit;
 }
 </style>

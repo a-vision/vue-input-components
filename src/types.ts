@@ -23,6 +23,7 @@ export interface TextInputProps {
   isTextarea?: boolean
   maxHeight?: string
   height?: string
+  bgColor?: string
 }
 
 export interface FileUploadProps {
