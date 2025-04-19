@@ -1,84 +1,36 @@
 <template>
-  <div
-    class="text-input"
-    :class="{
-      [`label-${labelPosition}`]: label,
-      [`label-align-${labelAlign}`]: label,
-    }"
-    :style="[
-      { width: type === 'date' ? totalWidth || '12rem' : totalWidth || '100%' },
-      labelStyle,
-      {
-        '--max-textarea-height': props.maxHeight || props.height || '14rem',
-        '--textarea-height': props.height || '5.5rem',
-      },
-    ]"
-  >
+  <div class="text-input" :class="{
+    [`label-${labelPosition}`]: label,
+    [`label-align-${labelAlign}`]: label,
+  }" :style="[
+    { width: type === 'date' ? totalWidth || '12rem' : totalWidth || '100%' },
+    labelStyle,
+    {
+      '--max-textarea-height': props.maxHeight || props.height || '14rem',
+      '--textarea-height': props.height || '5.5rem',
+    },
+  ]">
     <label v-if="label" :for="id" class="label">
       {{ label }}
     </label>
-    <div
-      class="input-wrapper"
-      :class="{
-        'has-error': error,
-        'has-icon': icon,
-      }"
-    >
+    <div class="input-wrapper" :class="{
+      'has-error': error,
+      'has-icon': icon,
+    }">
       <div v-if="icon" class="icon-wrapper" @click="focusInput">
         <font-awesome-icon :icon="icon" class="icon" />
       </div>
-      <Datepicker
-        v-if="type === 'date'"
-        :id="id"
-        v-model="dateValue"
-        :placeholder="placeholder"
-        :disabled="disabled"
-        :readonly="readonly"
-        :min-date="min"
-        :max-date="max"
-        :format="dateFormat"
-        :enable-time-picker="false"
-        :auto-apply="true"
-        :close-on-auto-apply="true"
-        :clearable="true"
-        :input-class-name="['input', { 'has-icon': icon }]"
-        @update:model-value="handleDateChange"
-        @focus="handleFocus"
-        @blur="handleBlur"
-      />
-      <input
-        v-else-if="!isTextarea"
-        :id="id"
-        :type="type"
-        :value="modelValue"
-        :placeholder="placeholder"
-        :required="required"
-        :disabled="disabled"
-        :readonly="readonly"
-        :maxlength="maxlength"
-        class="input"
-        @input="handleInput"
-        @focus="handleFocus"
-        @blur="handleBlur"
-        @keydown="handleKeydown"
-        ref="inputRef"
-      />
-      <textarea
-        v-else
-        :id="id"
-        :value="modelValue"
-        :placeholder="placeholder"
-        :required="required"
-        :disabled="disabled"
-        class="input"
-        @input="handleInput"
-        ref="inputRef"
-      ></textarea>
-      <span
-        v-if="required && !showSaved && !showChanged"
-        class="status-indicator required-indicator"
-        >required</span
-      >
+      <Datepicker v-if="type === 'date'" :id="id" v-model="dateValue" :placeholder="placeholder" :disabled="disabled"
+        :readonly="readonly" :min-date="min" :max-date="max" :format="dateFormat" :enable-time-picker="false"
+        :auto-apply="true" :close-on-auto-apply="true" :clearable="true"
+        :input-class-name="['input', { 'has-icon': icon }]" @update:model-value="handleDateChange" @focus="handleFocus"
+        @blur="handleBlur" />
+      <input v-else-if="!isTextarea" :id="id" :type="type" :value="modelValue" :placeholder="placeholder"
+        :required="required" :disabled="disabled" :readonly="readonly" :maxlength="maxlength" class="input"
+        @input="handleInput" @focus="handleFocus" @blur="handleBlur" @keydown="handleKeydown" ref="inputRef" />
+      <textarea v-else :id="id" :value="modelValue" :placeholder="placeholder" :required="required" :disabled="disabled"
+        class="input" @input="handleInput" ref="inputRef"></textarea>
+      <span v-if="required && !showSaved && !showChanged" class="status-indicator required-indicator">required</span>
       <transition name="fade">
         <span v-if="showSaved && !error" class="status-indicator saved-indicator">saved</span>
       </transition>
@@ -350,6 +302,7 @@ defineExpose({
 .input {
   padding: 0.75rem 1rem;
   border: none;
+  border-radius: 0.5rem;
   outline: none;
   font-size: 1rem;
   color: var(--text-color);
@@ -402,11 +355,11 @@ defineExpose({
 
 .status-indicator {
   position: absolute;
-  top: -0.1rem;
+  top: -1px;
+  line-height: 1px;
   right: 0.5rem;
   font-size: 0.75rem;
   color: var(--text-muted);
-  line-height: 0px;
   background-color: var(--input-bg-color);
   padding: 0 0.25rem;
 }
